@@ -11,7 +11,7 @@ export const ColumnOrderSvg = ({ colOrder, colId }: ColumnOrderSvgProps) => {
   if (!(colId in colOrder)) {
     return (
       <svg
-        className="w-4 h-4 text-gray-400 opacity-30 hover:opacity-100"
+        className="w-4 h-4 text-white opacity-60 hover:opacity-100 ml-1"
         stroke="currentColor"
         fill="currentColor"
         strokeWidth="0"
@@ -27,7 +27,7 @@ export const ColumnOrderSvg = ({ colOrder, colId }: ColumnOrderSvgProps) => {
   if (colOrder[colId] === ColumnOrderType.asc) {
     return (
       <svg
-        className="w-4 h-4 text-orange-500"
+        className="w-4 h-4 text-content-yellow ml-1"
         stroke="currentColor"
         fill="currentColor"
         strokeWidth="0"
@@ -42,7 +42,7 @@ export const ColumnOrderSvg = ({ colOrder, colId }: ColumnOrderSvgProps) => {
   }
   return (
     <svg
-      className="w-4 h-4 text-orange-500"
+      className="w-4 h-4 text-content-yellow ml-1"
       stroke="currentColor"
       fill="currentColor"
       strokeWidth="0"
@@ -60,8 +60,10 @@ interface TableHeaderProps {
   columnNames: TableColumn[];
   selectable: boolean;
   isActionRequired: boolean;
-  initialState: Dictionary<any>[];
-  setDisplayedRows: React.Dispatch<React.SetStateAction<Dictionary<any>[]>>;
+  initialState: Dictionary<unknown>[];
+  setDisplayedRows: React.Dispatch<React.SetStateAction<Dictionary<unknown>[]>>;
+  allSelected?: boolean;
+  onSelectAll?: (selected: boolean) => void;
 }
 
 export const TableHeader: React.FC<TableHeaderProps> = ({
@@ -70,6 +72,8 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   isActionRequired,
   initialState,
   setDisplayedRows,
+  allSelected = false,
+  onSelectAll,
 }) => {
   const [columnOrder, setColumnOrder] = useState<Dictionary<string>>({});
   const handleColumnOrderClick = useCallback(
@@ -93,15 +97,17 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   );
 
   return (
-    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+    <thead className="text-sm font-semibold text-white uppercase bg-primary">
       <tr className="items-center w-full">
         {selectable && (
-          <th scope="col" className="p-2">
+          <th scope="col" className="p-3">
             <div className="flex items-center">
               <input
                 id="checkbox-all-search"
                 type="checkbox"
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                checked={allSelected}
+                onChange={(e) => onSelectAll?.(e.target.checked)}
+                className="w-4 h-4 text-primary bg-white border-primary-light rounded focus:ring-primary focus:ring-2"
               />
               <label htmlFor="checkbox-all-search" className="sr-only">
                 checkbox
@@ -117,14 +123,14 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                 scope="col"
                 id={column.id}
                 onClick={() => handleColumnOrderClick(column.id)}
-                className={`px-2 py-2 ${
+                className={`px-3 py-3 ${
                   !column.notOrder
-                    ? "hover:bg-orange-100 dark:hover:bg-slate-50 cursor-pointer"
+                    ? "hover:bg-primary-medium cursor-pointer transition-colors duration-200"
                     : ""
                 }`}
               >
                 <div className="flex items-center justify-center">
-                  <span className="uppercase text-xs font-medium tracking-wider">
+                  <span className="uppercase text-sm font-semibold tracking-wider text-white">
                     {column.label}
                   </span>
                   {!column.notOrder && (
@@ -135,7 +141,10 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
             )
         )}
         {isActionRequired && (
-          <th scope="col" className="flex justify-center items-center mt-2">
+          <th
+            scope="col"
+            className="flex justify-center items-center mt-2 text-white font-semibold"
+          >
             Action
           </th>
         )}

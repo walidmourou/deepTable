@@ -12,9 +12,35 @@ interface PaginationProps {
   setCurrentPageIdxs: React.Dispatch<React.SetStateAction<CurrentPageIndexes>>;
 }
 
-const getPaginationRange = (nbrTotalRows: number, NbrRowsPerPage: number) => {
+const getPaginationRange = (
+  nbrTotalRows: number,
+  NbrRowsPerPage: number,
+  currentPage: number
+) => {
   const totalPages = Math.ceil(nbrTotalRows / NbrRowsPerPage);
-  return Array.from({ length: totalPages }, (_, i) => i + 1);
+  const maxVisiblePages = 5;
+
+  if (totalPages <= maxVisiblePages) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  // Calculate the start and end of the visible range
+  let start = currentPage - 2;
+  let end = currentPage + 2;
+
+  // Adjust for left boundary
+  if (start < 1) {
+    start = 1;
+    end = Math.min(maxVisiblePages, totalPages);
+  }
+
+  // Adjust for right boundary
+  if (end > totalPages) {
+    end = totalPages;
+    start = Math.max(1, totalPages - maxVisiblePages + 1);
+  }
+
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 };
 
 export const Pagination: React.FC<PaginationProps> = ({
@@ -26,15 +52,18 @@ export const Pagination: React.FC<PaginationProps> = ({
   const [pageId, setPageId] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultNbrRowsPerPage);
   const [paginationRange, setPaginationRange] = useState<number[]>(
-    getPaginationRange(displayedRowsCount, rowsPerPage)
+    getPaginationRange(displayedRowsCount, rowsPerPage, 1)
   );
 
   const handlePageChange = (newPage: number) => {
     setPageId(newPage);
     setCurrentPageIdxs({
-      firstRowIdx: (newPage - 1) * rowsPerPage + 1,
-      lastRowIdx: Math.min(newPage * rowsPerPage, displayedRowsCount - 1),
+      firstRowIdx: (newPage - 1) * rowsPerPage,
+      lastRowIdx: Math.min(newPage * rowsPerPage - 1, displayedRowsCount - 1),
     });
+    setPaginationRange(
+      getPaginationRange(displayedRowsCount, rowsPerPage, newPage)
+    );
   };
   const handleRowsPerPageChange = (newRowsPerPage: string) => {
     setRowsPerPage(parseInt(newRowsPerPage));
@@ -47,7 +76,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       ),
     });
     setPaginationRange(
-      getPaginationRange(displayedRowsCount, parseInt(newRowsPerPage))
+      getPaginationRange(displayedRowsCount, parseInt(newRowsPerPage), 1)
     );
   };
   return (
@@ -55,10 +84,10 @@ export const Pagination: React.FC<PaginationProps> = ({
       className="flex items-center justify-between pt-4 mx-2"
       aria-label="Table navigation"
     >
-      <div>
+      <div className="flex items-center space-x-4">
         <select
           aria-label="Rows per page"
-          className="p-2 mb-1 mr-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="p-2 text-sm text-secondary-400 border border-secondary-300 rounded-lg bg-white focus:ring-primary focus:border-primary transition-colors duration-200"
           onChange={(e) => handleRowsPerPageChange(e.target.value)}
           value={rowsPerPage}
         >
@@ -66,13 +95,13 @@ export const Pagination: React.FC<PaginationProps> = ({
           <option value="10">10</option>
           <option value="25">25</option>
         </select>
-        <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+        <span className="text-sm font-normal text-secondary-400">
           Showing{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            {currentPageIdxs.firstRowIdx}-{currentPageIdxs.lastRowIdx}
+          <span className="font-semibold text-primary-dark">
+            {currentPageIdxs.firstRowIdx + 1}-{currentPageIdxs.lastRowIdx + 1}
           </span>{" "}
           of{" "}
-          <span className="font-semibold text-gray-900 dark:text-white">
+          <span className="font-semibold text-primary-dark">
             {displayedRowsCount}
           </span>
         </span>
@@ -82,8 +111,12 @@ export const Pagination: React.FC<PaginationProps> = ({
         <li>
           <button
             type="button"
-            className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700"
-            onClick={() => setPageId(1)}
+            className={`flex items-center justify-center px-3 h-8 ml-0 leading-tight border border-secondary-300 rounded-l-lg transition-colors duration-200 ${
+              pageId === 1
+                ? "text-secondary-300 bg-secondary-100 cursor-not-allowed"
+                : "text-secondary-400 bg-white hover:bg-secondary-100 hover:text-primary"
+            }`}
+            onClick={() => handlePageChange(1)}
             disabled={pageId === 1}
           >
             {"<<"}
@@ -93,8 +126,12 @@ export const Pagination: React.FC<PaginationProps> = ({
         <li>
           <button
             type="button"
-            className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-            onClick={() => setPageId((prev) => prev - 1)}
+            className={`flex items-center justify-center px-3 h-8 leading-tight border border-secondary-300 transition-colors duration-200 ${
+              pageId === 1
+                ? "text-secondary-300 bg-secondary-100 cursor-not-allowed"
+                : "text-secondary-400 bg-white hover:bg-secondary-100 hover:text-primary"
+            }`}
+            onClick={() => handlePageChange(pageId - 1)}
             disabled={pageId === 1}
           >
             {"<"}
@@ -105,10 +142,10 @@ export const Pagination: React.FC<PaginationProps> = ({
           <li key={`page-${pageNum}`}>
             <button
               type="button"
-              className={`flex items-center justify-center px-3 h-8 border-gray-300 ${
+              className={`flex items-center justify-center px-3 h-8 border-secondary-300 transition-colors duration-200 ${
                 pageNum === pageId
-                  ? "text-blue-600 border bg-blue-50 hover:bg-blue-100 hover:text-blue-700"
-                  : "text-gray-500 border bg-white hover:bg-gray-100 hover:text-gray-700"
+                  ? "text-white border bg-primary hover:bg-primary-medium"
+                  : "text-secondary-400 border bg-white hover:bg-secondary-100 hover:text-primary"
               }`}
               onClick={() => handlePageChange(pageNum)}
             >
@@ -120,9 +157,13 @@ export const Pagination: React.FC<PaginationProps> = ({
         <li>
           <button
             type="button"
-            className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-            onClick={() => setPageId((prev) => prev + 1)}
-            disabled={pageId === paginationRange[-1]}
+            className={`flex items-center justify-center px-3 h-8 leading-tight border border-secondary-300 transition-colors duration-200 ${
+              pageId === paginationRange[paginationRange.length - 1]
+                ? "text-secondary-300 bg-secondary-100 cursor-not-allowed"
+                : "text-secondary-400 bg-white hover:bg-secondary-100 hover:text-primary"
+            }`}
+            onClick={() => handlePageChange(pageId + 1)}
+            disabled={pageId === paginationRange[paginationRange.length - 1]}
           >
             {">"}
           </button>
@@ -131,9 +172,15 @@ export const Pagination: React.FC<PaginationProps> = ({
         <li>
           <button
             type="button"
-            className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700"
-            onClick={() => setPageId(paginationRange[-1])}
-            disabled={pageId === paginationRange[-1]}
+            className={`flex items-center justify-center px-3 h-8 leading-tight border border-secondary-300 rounded-r-lg transition-colors duration-200 ${
+              pageId === paginationRange[paginationRange.length - 1]
+                ? "text-secondary-300 bg-secondary-100 cursor-not-allowed"
+                : "text-secondary-400 bg-white hover:bg-secondary-100 hover:text-primary"
+            }`}
+            onClick={() =>
+              handlePageChange(paginationRange[paginationRange.length - 1])
+            }
+            disabled={pageId === paginationRange[paginationRange.length - 1]}
           >
             {">>"}
           </button>

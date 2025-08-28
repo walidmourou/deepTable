@@ -29,3 +29,100 @@
   --color-content-green: #54a931;
   --color-content-green-dark: #486f4f;
 }
+
+/* Custom utility classes for table styling */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-primary-light {
+  background-color: var(--color-primary-light);
+}
+
+.bg-primary-medium {
+  background-color: var(--color-primary-medium);
+}
+
+.bg-secondary-100 {
+  background-color: var(--color-secondary-100);
+}
+
+.bg-secondary-200 {
+  background-color: var(--color-secondary-200);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-primary-dark {
+  color: var(--color-primary-dark);
+}
+
+.text-secondary-400 {
+  color: var(--color-secondary-400);
+}
+
+.text-content-yellow {
+  color: var(--color-content-yellow);
+}
+
+.text-content-orange {
+  color: var(--color-content-orange);
+}
+
+.text-content-red {
+  color: var(--color-content-red);
+}
+
+.border-primary {
+  border-color: var(--color-primary);
+}
+
+.border-primary-light {
+  border-color: var(--color-primary-light);
+}
+
+.border-secondary-200 {
+  border-color: var(--color-secondary-200);
+}
+
+.border-secondary-300 {
+  border-color: var(--color-secondary-300);
+}
+
+.border-content-orange {
+  border-color: var(--color-content-orange);
+}
+
+.border-content-red {
+  border-color: var(--color-content-red);
+}
+
+.hover\:bg-primary-medium:hover {
+  background-color: var(--color-primary-medium);
+}
+
+.hover\:bg-secondary-100:hover {
+  background-color: var(--color-secondary-100);
+}
+
+.hover\:bg-primary:hover {
+  background-color: var(--color-primary);
+}
+
+.hover\:bg-content-orange:hover {
+  background-color: var(--color-content-orange);
+}
+
+.hover\:bg-content-red:hover {
+  background-color: var(--color-content-red);
+}
+
+.focus\:ring-primary:focus {
+  --tw-ring-color: var(--color-primary);
+}
+
+.focus\:border-primary:focus {
+  border-color: var(--color-primary);
+}

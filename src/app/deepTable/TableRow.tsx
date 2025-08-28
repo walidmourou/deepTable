@@ -1,3 +1,4 @@
+import React from "react";
 import { ColumnType, Dictionary, TableColumn } from "./types";
 
 interface TableRowProps {
@@ -9,6 +10,8 @@ interface TableRowProps {
   displayDeleteAction: boolean;
   displayViewAction: boolean;
   selectable: boolean;
+  isSelected?: boolean;
+  onSelectChange?: (rowId: number, selected: boolean) => void;
   handleEditAction: (_row: Dictionary<unknown>, _cols: TableColumn[]) => void;
   handleDeleteAction: (_row: Dictionary<unknown>) => void;
   handleViewAction: (_row: Dictionary<unknown>) => void;
@@ -25,28 +28,17 @@ const convertEpochToTime = (epoch: number): string => {
 const renderCellContent = (value: unknown, type: ColumnType) => {
   switch (type) {
     case ColumnType.boolean:
-      if (value === true || value === "1" || value === "true") {
-        return (
-          <input
-            title="Boolean Value"
-            disabled
-            checked
-            type="checkbox"
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-          />
-        );
-      }
-      if (value === false || value === "0" || value === "false") {
-        return (
-          <input
-            title="Boolean Value"
-            disabled
-            type="checkbox"
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-          />
-        );
-      }
-      return "undefined";
+      const booleanValue = value === true || value === "1" || value === "true";
+      return (
+        <input
+          title="Boolean Value"
+          disabled
+          checked={booleanValue}
+          type="checkbox"
+          className="w-4 h-4 text-primary bg-white border-secondary-300 rounded focus:ring-primary"
+          readOnly
+        />
+      );
 
     case ColumnType.stringArray:
       if (!value) return null;
@@ -91,6 +83,8 @@ export const TableRow: React.FC<TableRowProps> = ({
   displayDeleteAction,
   displayViewAction,
   selectable,
+  isSelected = false,
+  onSelectChange,
   handleEditAction,
   handleDeleteAction,
   handleViewAction,
@@ -98,14 +92,20 @@ export const TableRow: React.FC<TableRowProps> = ({
   return (
     <tr
       key={`row-${rid}`}
-      className="w-full bg-white border-b hover:bg-gray-50"
+      className={`w-full border-b border-secondary-200 transition-colors duration-150 ${
+        isSelected
+          ? "bg-primary-light text-primary-dark"
+          : "bg-white hover:bg-secondary-100"
+      }`}
     >
       {selectable && (
-        <td className="w-4 p-2">
+        <td className="w-4 p-3">
           <div className="flex items-center">
             <input
               type="checkbox"
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+              checked={isSelected}
+              onChange={(e) => onSelectChange?.(rid, e.target.checked)}
+              className="w-4 h-4 text-primary bg-white border-secondary-300 rounded focus:ring-primary focus:ring-2"
             />
           </div>
         </td>
@@ -115,10 +115,10 @@ export const TableRow: React.FC<TableRowProps> = ({
           !col.invisible && (
             <td
               key={`${rid}-${col.id}`}
-              className={`${isDenseTable ? "px-3 py-1" : "px-6 py-4"} ${
+              className={`${isDenseTable ? "px-3 py-2" : "px-6 py-4"} ${
                 col.highlight
-                  ? "font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  : ""
+                  ? "font-semibold text-primary-dark"
+                  : "text-secondary-400"
               } ${col.align || "text-center"}`}
             >
               {renderCellContent(row[col.id], col.type)}
@@ -127,15 +127,15 @@ export const TableRow: React.FC<TableRowProps> = ({
       )}
       {(displayEditAction || displayDeleteAction || displayViewAction) && (
         <td
-          className={`flex items-center justify-center mt-2 space-x-1 ${
-            isDenseTable ? "px-3 py-1" : "px-6 py-4"
+          className={`flex items-center justify-center mt-2 space-x-2 ${
+            isDenseTable ? "px-3 py-2" : "px-6 py-4"
           }`}
         >
           {displayEditAction && (
             <button
               type="button"
               onClick={() => handleEditAction(row, columnNames)}
-              className="text-yellow-600 border border-yellow-600 hover:bg-yellow-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-xs px-2 py-1 text-center me-2 mb-2"
+              className="text-content-orange border border-content-orange hover:bg-content-orange hover:text-white focus:ring-4 focus:outline-none focus:ring-content-orange/30 font-medium rounded-lg text-xs px-3 py-1.5 text-center transition-colors duration-200"
             >
               Edit
             </button>
@@ -144,7 +144,7 @@ export const TableRow: React.FC<TableRowProps> = ({
             <button
               type="button"
               onClick={() => handleDeleteAction(row)}
-              className="text-red-600 border border-red-600 hover:bg-red-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-2 py-1 text-center me-2 mb-2"
+              className="text-content-red border border-content-red hover:bg-content-red hover:text-white focus:ring-4 focus:outline-none focus:ring-content-red/30 font-medium rounded-lg text-xs px-3 py-1.5 text-center transition-colors duration-200"
             >
               Delete
             </button>
@@ -153,7 +153,7 @@ export const TableRow: React.FC<TableRowProps> = ({
             <button
               type="button"
               onClick={() => handleViewAction(row)}
-              className="text-blue-600 border border-blue-600 hover:bg-blue-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-2 py-1 text-center me-2 mb-2"
+              className="text-primary border border-primary hover:bg-primary hover:text-white focus:ring-4 focus:outline-none focus:ring-primary/30 font-medium rounded-lg text-xs px-3 py-1.5 text-center transition-colors duration-200"
             >
               View
             </button>

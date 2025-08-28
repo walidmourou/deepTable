@@ -37,7 +37,7 @@ export const SearchField: React.FC<SearchFieldProps> = ({
     <div className="relative">
       <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
         <svg
-          className="w-4 h-4 text-gray-500 dark:text-gray-400"
+          className="w-4 h-4 text-secondary-400"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 20 20"
@@ -54,7 +54,7 @@ export const SearchField: React.FC<SearchFieldProps> = ({
       <input
         type="text"
         id={`search-${colId}`}
-        className="block p-2 pl-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+        className="block p-2 pl-3 text-sm text-secondary-400 border border-secondary-300 rounded-lg bg-white focus:ring-primary focus:border-primary transition-colors duration-200"
         placeholder={label}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -73,7 +73,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
   <select
     key={`filter-${colId}`}
     aria-label={column.label}
-    className={`filterType${column.type} m-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1`}
+    className={`filterType${column.type} m-1 bg-white border border-secondary-300 text-secondary-400 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 transition-colors duration-200`}
     onChange={(e) => {
       onChange(
         column.type === ColumnType.integer
@@ -83,11 +83,15 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
     }}
     value={value.toString()}
   >
-    <option value="" className="font-bold">
+    <option value="" className="font-semibold text-secondary-400">
       {column.label}
     </option>
     {options.map((v) => (
-      <option key={String(v)} value={v as string | number}>
+      <option
+        key={String(v)}
+        value={v as string | number}
+        className="text-secondary-400"
+      >
         {String(v)}
       </option>
     ))}
@@ -96,9 +100,9 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
 
 interface SearchFilterAddSectionProps {
   columnNames: TableColumn[];
-  initialState: Dictionary<any>[];
-  initialRowsValues: Dictionary<any>[];
-  setDisplayedRows: React.Dispatch<React.SetStateAction<Dictionary<any>[]>>;
+  initialState: Dictionary<unknown>[];
+  initialRowsValues: Dictionary<unknown>[];
+  setDisplayedRows: React.Dispatch<React.SetStateAction<Dictionary<unknown>[]>>;
   displayAddButton?: boolean;
   handleAddAction?:
     | null
@@ -200,10 +204,10 @@ export const SearchFilterAddSection: React.FC<SearchFilterAddSectionProps> = ({
       {/* Filters */}
       <div className="flex items-center justify-start bg-white">
         {Object.keys(filters).length > 0 && (
-          <div>
+          <div className="mr-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-400"
+              className="h-6 w-6 text-primary"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -242,7 +246,7 @@ export const SearchFilterAddSection: React.FC<SearchFilterAddSectionProps> = ({
         <div>
           <button
             type="button"
-            className="flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none"
+            className="flex items-center justify-center text-white bg-primary hover:bg-primary-medium focus:ring-4 focus:ring-primary/30 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none transition-colors duration-200"
             onClick={() => handleAdd(columnNames)}
             disabled={isLoading}
           >
