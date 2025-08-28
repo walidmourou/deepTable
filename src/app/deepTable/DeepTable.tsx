@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Dictionary,
   TableColumn,
@@ -40,6 +40,14 @@ const DeepTable: React.FC<DeepTableProps> = ({
     firstRowIdx: 0,
     lastRowIdx: defaultNbrRowsPerPage - 1,
   });
+
+  // Reset pagination to first page when displayedRows changes (due to filtering/searching)
+  useEffect(() => {
+    setCurrentPageIdxs({
+      firstRowIdx: 0,
+      lastRowIdx: Math.min(defaultNbrRowsPerPage - 1, displayedRows.length - 1),
+    });
+  }, [displayedRows.length, defaultNbrRowsPerPage]);
   // Row selection state
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
 
@@ -195,7 +203,7 @@ const DeepTable: React.FC<DeepTableProps> = ({
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-zinc-100 p-4 rounded-lg shadow-sm relative">
       {isLoading && (
         <div className="absolute inset-0 bg-secondary-100 opacity-75 flex items-center justify-center z-50">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export interface CurrentPageIndexes {
   firstRowIdx: number;
@@ -54,6 +54,33 @@ export const Pagination: React.FC<PaginationProps> = ({
   const [paginationRange, setPaginationRange] = useState<number[]>(
     getPaginationRange(displayedRowsCount, rowsPerPage, 1)
   );
+
+  // Reset pagination when displayedRowsCount changes (due to filtering/searching)
+  useEffect(() => {
+    const totalPages = Math.ceil(displayedRowsCount / rowsPerPage);
+
+    // If current page is beyond available pages, reset to page 1
+    if (pageId > totalPages && totalPages > 0) {
+      setPageId(1);
+      setCurrentPageIdxs({
+        firstRowIdx: 0,
+        lastRowIdx: Math.min(rowsPerPage - 1, displayedRowsCount - 1),
+      });
+      setPaginationRange(
+        getPaginationRange(displayedRowsCount, rowsPerPage, 1)
+      );
+    } else {
+      // Update pagination range for current page
+      setPaginationRange(
+        getPaginationRange(displayedRowsCount, rowsPerPage, pageId)
+      );
+      // Update current page indexes to reflect the new row count
+      setCurrentPageIdxs({
+        firstRowIdx: (pageId - 1) * rowsPerPage,
+        lastRowIdx: Math.min(pageId * rowsPerPage - 1, displayedRowsCount - 1),
+      });
+    }
+  }, [displayedRowsCount, rowsPerPage, pageId, setCurrentPageIdxs]);
 
   const handlePageChange = (newPage: number) => {
     setPageId(newPage);

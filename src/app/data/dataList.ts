@@ -1,65 +1,3 @@
-import { CellTextAlign, ColumnType, TableColumn } from "./app/deepTable/types";
-
-export const dogRacesTableHeader: TableColumn[] = [
-  {
-    id: "id",
-    label: "ID",
-    align: CellTextAlign.left,
-    type: ColumnType.string,
-    highlight: true,
-    isKey: true,
-    isMandatory: true,
-  },
-  {
-    id: "name",
-    label: "Name",
-    align: CellTextAlign.left,
-    type: ColumnType.string,
-    canSearch: true,
-  },
-  {
-    id: "country",
-    label: "Country",
-    align: CellTextAlign.left,
-    type: ColumnType.string,
-    canFilter: true,
-  },
-  {
-    id: "max_age",
-    label: "Max Age",
-    align: CellTextAlign.right,
-    type: ColumnType.integer,
-    canFilter: true,
-  },
-  {
-    id: "hight",
-    label: "Hight",
-    align: CellTextAlign.right,
-    type: ColumnType.float,
-  },
-  {
-    id: "width",
-    label: "Width",
-    align: CellTextAlign.right,
-    type: ColumnType.float,
-    canFilter: true,
-  },
-  {
-    id: "appearance_date",
-    label: "Appearance Date",
-    align: CellTextAlign.center,
-    type: ColumnType.date,
-    canFilter: true,
-  },
-  {
-    id: "is_dangerous",
-    label: "Is Dangerous",
-    align: CellTextAlign.center,
-    type: ColumnType.boolean,
-    canFilter: true,
-  },
-];
-
 export const dogRaces = [
   {
     id: "1",
@@ -455,6 +393,16 @@ export const dogRaces = [
     id: "40",
     name: "Saint Bernard",
     country: "Switzerland",
+    max_age: 10,
+    hight: 30.0,
+    width: 180.0,
+    appearance_date: "1885-01-01",
+    is_dangerous: false,
+  },
+  {
+    id: "41",
+    name: "Not existing",
+    country: "",
     max_age: 10,
     hight: 30.0,
     width: 180.0,
