@@ -7,13 +7,13 @@ import {
   TableDataType,
   DeepTableProps,
 } from "./types";
-import { TableHeader } from "./TableHeader";
+import { TableHeader } from "./tableComponents/TableHeader";
 import { CurrentPageIndexes, Pagination } from "./Pagination";
-import { TableRow } from "./TableRow";
+import { TableRow } from "./tableComponents/TableRow";
 import { SearchFilterAddSection } from "./UpperMenu";
 import { areRowsEqual } from "./utils";
 
-const DeepTable: React.FC<DeepTableProps> = ({
+export default function DeepTable({
   columnNames = [],
   initialRowsValues = [],
   defaultNbrRowsPerPage = 10,
@@ -24,19 +24,45 @@ const DeepTable: React.FC<DeepTableProps> = ({
   displayDeleteAction = false,
   displayAddButton = false,
   displayViewAction = false,
-  handleAddAction = null,
-  handleEditAction = null,
-  handleDeleteAction = null,
-  handleViewAction = null,
+  handleAddAction = () => {},
+  handleEditAction = () => {},
+  handleDeleteAction = () => {},
+  handleViewAction = () => {},
   selectedRows = new Set<Dictionary<unknown>>(),
   setSelectedRows = () => {},
-}) => {
+}: DeepTableProps) {
+  // ============================================================================
+  // STATE MANAGEMENT
+  // ============================================================================
+
+  // Table data state
   const [displayedRows, setDisplayedRows] =
     useState<TableDataType>(initialRowsValues);
+  const [filteredAndSearchedRows, setFilteredAndSearchedRows] =
+    useState<TableDataType>(initialRowsValues);
+
+  // Pagination state
   const [currentPageIdxs, setCurrentPageIdxs] = useState<CurrentPageIndexes>({
     firstRowIdx: 0,
     lastRowIdx: defaultNbrRowsPerPage - 1,
   });
+
+  // UI state
+  const [resetSort, setResetSort] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  // ============================================================================
+  // EFFECTS
+  // ============================================================================
+
+  // Update filtered state when initial data changes
+  useEffect(() => {
+    setFilteredAndSearchedRows(initialRowsValues);
+    setDisplayedRows(initialRowsValues);
+    // Reset sorting when data changes significantly
+    setResetSort((prev) => !prev);
+  }, [initialRowsValues]);
 
   // Reset pagination to first page when displayedRows changes (due to filtering/searching)
   useEffect(() => {
@@ -46,7 +72,36 @@ const DeepTable: React.FC<DeepTableProps> = ({
     });
   }, [displayedRows.length, defaultNbrRowsPerPage]);
 
-  // Helper functions for row selection
+  // ============================================================================
+  // DATA HANDLERS
+  // ============================================================================
+
+  // Callback for when filtering/searching changes
+  const handleFilterSearchChange = useCallback(
+    (newRows: React.SetStateAction<TableDataType>) => {
+      const resolvedRows =
+        typeof newRows === "function"
+          ? newRows(filteredAndSearchedRows)
+          : newRows;
+      setFilteredAndSearchedRows(resolvedRows);
+      setDisplayedRows(resolvedRows);
+    },
+    [filteredAndSearchedRows]
+  );
+
+  // Callback for when sorting changes
+  const handleSortChange = useCallback(
+    (sortedRows: React.SetStateAction<TableDataType>) => {
+      setDisplayedRows(sortedRows);
+    },
+    []
+  );
+
+  // ============================================================================
+  // ROW SELECTION LOGIC
+  // ============================================================================
+
+  // Helper function to check if a row is selected
   const isRowSelected = useCallback(
     (row: Dictionary<unknown>): boolean => {
       for (const selectedRow of selectedRows) {
@@ -59,6 +114,7 @@ const DeepTable: React.FC<DeepTableProps> = ({
     [selectedRows]
   );
 
+  // Helper function to remove a row from selection
   const removeRowFromSelection = useCallback(
     (
       rowToRemove: Dictionary<unknown>,
@@ -74,6 +130,7 @@ const DeepTable: React.FC<DeepTableProps> = ({
     []
   );
 
+  // Handle individual row selection
   const handleRowSelection = useCallback(
     (row: Dictionary<unknown>, selected: boolean) => {
       setSelectedRows((prev) => {
@@ -89,6 +146,7 @@ const DeepTable: React.FC<DeepTableProps> = ({
     [setSelectedRows, removeRowFromSelection]
   );
 
+  // Handle select all functionality
   const handleSelectAll = useCallback(
     (selected: boolean) => {
       if (selected) {
@@ -132,6 +190,12 @@ const DeepTable: React.FC<DeepTableProps> = ({
     ]
   );
 
+  // Handle unselect all functionality
+  const handleUnselectAll = useCallback(() => {
+    setSelectedRows(new Set());
+  }, [setSelectedRows]);
+
+  // Computed value for whether all visible rows are selected
   const allSelected = (() => {
     const rowsToCheck = displayPagination
       ? displayedRows.slice(
@@ -144,10 +208,10 @@ const DeepTable: React.FC<DeepTableProps> = ({
       rowsToCheck.length > 0 && rowsToCheck.every((row) => isRowSelected(row))
     );
   })();
-  // ###############################################################################
-  // Table action handlers
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  // ============================================================================
+  // TABLE ACTION HANDLERS
+  // ============================================================================
+
   const tableAddAction = useCallback(
     async (cols: TableColumn[]) => {
       try {
@@ -161,7 +225,7 @@ const DeepTable: React.FC<DeepTableProps> = ({
         setIsLoading(false);
       }
     },
-    [handleAddAction]
+    [handleAddAction, setError, setIsLoading]
   );
 
   const tableEditAction = useCallback(
@@ -177,7 +241,7 @@ const DeepTable: React.FC<DeepTableProps> = ({
         setIsLoading(false);
       }
     },
-    [handleEditAction]
+    [handleEditAction, setError, setIsLoading]
   );
 
   const tableDeleteAction = useCallback(
@@ -193,7 +257,7 @@ const DeepTable: React.FC<DeepTableProps> = ({
         setIsLoading(false);
       }
     },
-    [handleDeleteAction]
+    [handleDeleteAction, setError, setIsLoading]
   );
 
   const tableViewAction = useCallback(
@@ -209,14 +273,14 @@ const DeepTable: React.FC<DeepTableProps> = ({
         setIsLoading(false);
       }
     },
-    [handleViewAction]
+    [handleViewAction, setError, setIsLoading]
   );
-  // End of Table action handlers
-  // ###############################################################################
+  // End of TABLE ACTION HANDLERS
+  // ============================================================================
 
-  const handleUnselectAll = useCallback(() => {
-    setSelectedRows(new Set());
-  }, [setSelectedRows]);
+  // ============================================================================
+  // ERROR HANDLING & RENDERING
+  // ============================================================================
 
   // Error boundary render
   if (error) {
@@ -234,45 +298,61 @@ const DeepTable: React.FC<DeepTableProps> = ({
     );
   }
 
+  // ============================================================================
+  // COMPUTED VALUES FOR CURRENT PAGE
+  // ============================================================================
+
+  const currentPageRows = displayPagination
+    ? displayedRows.slice(
+        currentPageIdxs.firstRowIdx,
+        currentPageIdxs.lastRowIdx + 1
+      )
+    : displayedRows;
+
+  const isActionRequired =
+    displayEditAction || displayDeleteAction || displayViewAction;
+
+  // ============================================================================
+  // MAIN RENDER
+  // ============================================================================
+
   return (
     <div className="w-full bg-zinc-100 p-4 rounded-lg shadow-sm relative">
+      {/* Loading Overlay */}
       {isLoading && (
         <div className="absolute inset-0 bg-secondary-100 opacity-75 flex items-center justify-center z-50">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
         </div>
       )}
+
       <div className={isLoading ? "opacity-50" : ""}>
+        {/* Upper Menu Section */}
         <SearchFilterAddSection
           columnNames={columnNames}
           initialState={initialRowsValues}
-          setDisplayedRows={setDisplayedRows}
+          setDisplayedRows={handleFilterSearchChange}
           initialRowsValues={initialRowsValues}
           displayAddButton={displayAddButton}
           handleAddAction={tableAddAction}
           selectedRowsCount={selectedRows.size}
           onUnselectAll={handleUnselectAll}
         />
+
+        {/* Table Section */}
         <div className="w-full overflow-x-auto border border-secondary-200 rounded-lg shadow-sm">
           <table className="w-full border-collapse bg-white">
             <TableHeader
               columnNames={columnNames}
               selectable={selectable}
-              isActionRequired={
-                displayEditAction || displayDeleteAction || displayViewAction
-              }
-              initialState={initialRowsValues}
-              setDisplayedRows={setDisplayedRows}
+              isActionRequired={isActionRequired}
+              initialState={filteredAndSearchedRows}
+              setDisplayedRows={handleSortChange}
               allSelected={allSelected}
               onSelectAll={handleSelectAll}
+              resetSort={resetSort}
             />
             <tbody>
-              {(displayPagination
-                ? displayedRows.slice(
-                    currentPageIdxs.firstRowIdx,
-                    currentPageIdxs.lastRowIdx + 1
-                  )
-                : displayedRows
-              ).map((row, index) => (
+              {currentPageRows.map((row, index) => (
                 <TableRow
                   key={
                     displayPagination
@@ -302,6 +382,7 @@ const DeepTable: React.FC<DeepTableProps> = ({
           </table>
         </div>
 
+        {/* Pagination Section */}
         {displayPagination && (
           <Pagination
             displayedRowsCount={displayedRows.length}
@@ -313,6 +394,4 @@ const DeepTable: React.FC<DeepTableProps> = ({
       </div>
     </div>
   );
-};
-
-export default DeepTable;
+}

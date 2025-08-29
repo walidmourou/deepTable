@@ -1,6 +1,7 @@
-import { ColumnOrderType, Dictionary, TableColumn } from "./types";
-import { sortFunction } from "./utils";
+import { Dictionary, TableColumn } from "../types";
+import { sortFunction } from "../utils";
 import { useCallback, useState, useMemo, useEffect } from "react";
+import { ColumnOrderType } from "./types";
 
 interface ColumnOrderSvgProps {
   colOrder: Dictionary<string>;
@@ -73,6 +74,7 @@ interface TableHeaderProps {
   allSelected?: boolean;
   onSelectAll?: (selected: boolean) => void;
   onSortReset?: () => void; // Optional callback for when sorting is reset
+  resetSort?: boolean; // Flag to trigger sort reset from parent
 }
 
 export const TableHeader: React.FC<TableHeaderProps> = ({
@@ -84,14 +86,23 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   allSelected = false,
   onSelectAll,
   onSortReset,
+  resetSort = false,
 }) => {
   const [columnOrder, setColumnOrder] = useState<Dictionary<string>>({});
 
   // Memoize the sort function for better performance
   const sortRows = useMemo(() => sortFunction(columnNames), [columnNames]);
 
+  // Reset sorting when resetSort flag changes
+  useEffect(() => {
+    if (resetSort) {
+      setColumnOrder({});
+    }
+  }, [resetSort]);
+
   // Effect to handle sorting when columnOrder changes
   useEffect(() => {
+    // Start with the current initialState (which could be filtered/searched data)
     const newDisplayedRows = [...initialState];
 
     // Find the active sort column
@@ -111,7 +122,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
     }
 
     setDisplayedRows(newDisplayedRows);
-  }, [columnOrder, initialState, sortRows, setDisplayedRows]);
+  }, [columnOrder, initialState, sortRows]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Function to reset all sorting
   const resetAllSorting = useCallback(() => {

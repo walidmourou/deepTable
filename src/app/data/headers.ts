@@ -33,7 +33,7 @@ export const dogRacesTableHeader: TableColumn[] = [
   },
   {
     id: "hight",
-    label: "Hight",
+    label: "Height",
     align: CellTextAlign.right,
     type: ColumnType.float,
   },
@@ -44,16 +44,34 @@ export const dogRacesTableHeader: TableColumn[] = [
     type: ColumnType.float,
   },
   {
-    id: "appearance_date",
-    label: "Appearance Date",
-    align: CellTextAlign.center,
-    type: ColumnType.string,
-  },
-  {
     id: "is_dangerous",
     label: "Is Dangerous",
     align: CellTextAlign.center,
     type: ColumnType.boolean,
     canFilter: true,
+  },
+  {
+    id: "registration_timestamp_s",
+    label: "Registration (s)",
+    align: CellTextAlign.center,
+    type: ColumnType.timestamp_s,
+  },
+  {
+    id: "last_checkup_timestamp_ms",
+    label: "Last Checkup (ms)",
+    align: CellTextAlign.center,
+    type: ColumnType.timestamp_ms,
+  },
+  {
+    id: "birth_date",
+    label: "Birth Date",
+    align: CellTextAlign.center,
+    type: ColumnType.date,
+  },
+  {
+    id: "characteristics",
+    label: "Characteristics",
+    align: CellTextAlign.left,
+    type: ColumnType.variant,
   },
 ];

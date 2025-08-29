@@ -11,13 +11,7 @@ export enum ColumnType {
   timestamp_s = "Timestamp in Seconds",
   timestamp_ms = "Timestamp in Milliseconds",
   date = "date",
-  guid = "Universally unique identifier",
-  stringArray = "String Array",
-}
-export enum ColumnOrderType {
-  asc = "Ascending",
-  desc = "Descending",
-  neutral = "Neutral",
+  variant = "Array, object, etc.",
 }
 
 export type TableColumn = {
@@ -36,30 +30,11 @@ export type TableColumn = {
   notOrder?: boolean;
 };
 
-export type Filter = {
-  [key: string]: string | number | boolean | null;
-};
-
-export type FilterableColumnType =
-  | ColumnType.string
-  | ColumnType.integer
-  | ColumnType.boolean;
-
-export function isFilterableColumnType(
-  type: ColumnType
-): type is FilterableColumnType {
-  return (
-    type === ColumnType.string ||
-    type === ColumnType.integer ||
-    type === ColumnType.boolean
-  );
-}
-
-export type TableDataType = Array<Dictionary<unknown>>;
-
 export interface Dictionary<T> {
   [key: string]: T;
 }
+
+export type TableDataType = Array<Dictionary<unknown>>;
 
 export interface DeepTableProps {
   columnNames: TableColumn[];

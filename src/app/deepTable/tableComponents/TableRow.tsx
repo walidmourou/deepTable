@@ -1,5 +1,5 @@
 import React from "react";
-import { ColumnType, Dictionary, TableColumn } from "./types";
+import { ColumnType, Dictionary, TableColumn } from "../types";
 
 interface TableRowProps {
   row: Dictionary<unknown>;
@@ -23,6 +23,60 @@ const convertEpochToTime = (epoch: number): string => {
     dateStyle: "short",
     timeStyle: "short",
   }).format(date);
+};
+
+const convertTimestampSecondsToTime = (timestamp: number): string => {
+  const date = new Date(timestamp * 1000); // Convert seconds to milliseconds
+  return new Intl.DateTimeFormat("de-DE", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(date);
+};
+
+const convertTimestampMillisecondsToTime = (timestamp: number): string => {
+  const date = new Date(timestamp);
+  return new Intl.DateTimeFormat("de-DE", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(date);
+};
+
+const renderVariantContent = (value: unknown): React.ReactElement => {
+  if (value === null || value === undefined) {
+    return <span className="text-secondary-400 italic">null</span>;
+  }
+
+  if (Array.isArray(value)) {
+    return (
+      <div className="max-w-xs">
+        <span className="text-xs text-secondary-500 block">
+          Array ({value.length})
+        </span>
+        <div className="text-sm truncate" title={JSON.stringify(value)}>
+          [
+          {value
+            .slice(0, 2)
+            .map((item) => JSON.stringify(item))
+            .join(", ")}
+          {value.length > 2 ? "..." : ""}]
+        </div>
+      </div>
+    );
+  }
+
+  if (typeof value === "object") {
+    const objStr = JSON.stringify(value);
+    return (
+      <div className="max-w-xs">
+        <span className="text-xs text-secondary-500 block">Object</span>
+        <div className="text-sm truncate" title={objStr}>
+          {objStr.length > 30 ? `${objStr.substring(0, 30)}...` : objStr}
+        </div>
+      </div>
+    );
+  }
+
+  return <span className="text-sm">{String(value)}</span>;
 };
 
 const renderCellContent = (value: unknown, type: ColumnType) => {
@@ -51,34 +105,26 @@ const renderCellContent = (value: unknown, type: ColumnType) => {
         />
       );
 
-    case ColumnType.stringArray:
-      if (!value) return null;
-      const arrayValue = value as string[];
-      return (
-        <button className="relative group z-50 cursor-pointer">
-          {arrayValue.length < 2 ? (
-            <p>{arrayValue[0]}</p>
-          ) : (
-            <div>
-              <p className="block group-focus:hidden underline underline-offset-4">
-                {arrayValue[0]}
-              </p>
-              <div className="flex justify-center">
-                <div className="text-left">
-                  {arrayValue.map((val: string, key: number) => (
-                    <p className="hidden group-focus:block" key={key + val}>
-                      - {val}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </button>
-      );
+    case ColumnType.timestamp_s:
+      if (value === null || value === undefined) {
+        return <span className="text-secondary-400">—</span>;
+      }
+      return <p>{convertTimestampSecondsToTime(value as number)}</p>;
+
+    case ColumnType.timestamp_ms:
+      if (value === null || value === undefined) {
+        return <span className="text-secondary-400">—</span>;
+      }
+      return <p>{convertTimestampMillisecondsToTime(value as number)}</p>;
 
     case ColumnType.date:
+      if (value === null || value === undefined) {
+        return <span className="text-secondary-400">—</span>;
+      }
       return <p>{convertEpochToTime(value as number)}</p>;
+
+    case ColumnType.variant:
+      return renderVariantContent(value);
 
     default:
       return value?.toString();

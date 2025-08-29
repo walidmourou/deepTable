@@ -6,8 +6,16 @@ export const dogRaces = [
     max_age: 12,
     hight: 24.0,
     width: 65.0,
-    appearance_date: "1865-01-01",
     is_dangerous: false,
+    registration_timestamp_s: 1640995200, // 2022-01-01 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: 1704067200000, // 2024-01-01 00:00:00 UTC in milliseconds
+    birth_date: 1609459200000, // 2021-01-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: {
+      temperament: ["Friendly", "Intelligent", "Devoted"],
+      energy_level: "High",
+      good_with_kids: true,
+      training_difficulty: "Easy",
+    },
   },
   {
     id: "2",
@@ -16,8 +24,11 @@ export const dogRaces = [
     max_age: 13,
     hight: 26.0,
     width: 75.0,
-    appearance_date: "1899-01-01",
     is_dangerous: false,
+    registration_timestamp_s: 1672531200, // 2023-01-01 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: 1706745600000, // 2024-02-01 00:00:00 UTC in milliseconds
+    birth_date: 1612137600000, // 2021-02-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: ["Loyal", "Courageous", "Versatile", "Confident"],
   },
   {
     id: "3",
@@ -26,8 +37,16 @@ export const dogRaces = [
     max_age: 10,
     hight: 27.0,
     width: 110.0,
-    appearance_date: "1901-01-01",
     is_dangerous: true,
+    registration_timestamp_s: 1641081600, // 2022-01-02 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: 1709424000000, // 2024-03-03 00:00:00 UTC in milliseconds
+    birth_date: 1614556800000, // 2021-03-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: {
+      temperament: "Protective",
+      size_category: "Large",
+      guard_dog: true,
+      exercise_needs: ["Daily walks", "Mental stimulation"],
+    },
   },
   {
     id: "4",
@@ -36,8 +55,11 @@ export const dogRaces = [
     max_age: 14,
     hight: 24.5,
     width: 70.0,
-    appearance_date: "1903-01-01",
     is_dangerous: false,
+    registration_timestamp_s: 1643760000, // 2022-02-01 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: 1712016000000, // 2024-04-02 00:00:00 UTC in milliseconds
+    birth_date: 1617235200000, // 2021-04-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: null,
   },
   {
     id: "5",
@@ -46,8 +68,11 @@ export const dogRaces = [
     max_age: 10,
     hight: 16.0,
     width: 50.0,
-    appearance_date: "1886-01-01",
     is_dangerous: false,
+    registration_timestamp_s: null,
+    last_checkup_timestamp_ms: undefined,
+    birth_date: null,
+    characteristics: ["Docile", "Willful", "Friendly"],
   },
   {
     id: "6",
@@ -56,8 +81,16 @@ export const dogRaces = [
     max_age: 15,
     hight: 24.0,
     width: 60.0,
-    appearance_date: "1887-01-01",
     is_dangerous: false,
+    registration_timestamp_s: 1646092800, // 2022-03-01 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: 1714694400000, // 2024-05-03 00:00:00 UTC in milliseconds
+    birth_date: 1619827200000, // 2021-05-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: {
+      coat_type: "Curly",
+      hypoallergenic: true,
+      intelligence_rank: 2,
+      variations: ["Standard", "Miniature", "Toy"],
+    },
   },
   {
     id: "7",
@@ -66,8 +99,11 @@ export const dogRaces = [
     max_age: 14,
     hight: 23.5,
     width: 60.0,
-    appearance_date: "1909-01-01",
     is_dangerous: false,
+    registration_timestamp_s: 1648771200, // 2022-04-01 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: 1717372800000, // 2024-06-03 00:00:00 UTC in milliseconds
+    birth_date: 1622505600000, // 2021-06-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: ["Energetic", "Outgoing", "Mischievous"],
   },
   {
     id: "8",
@@ -76,8 +112,19 @@ export const dogRaces = [
     max_age: 13,
     hight: 28.0,
     width: 88.0,
-    appearance_date: "1890-01-01",
     is_dangerous: true,
+    registration_timestamp_s: 1651363200, // 2022-05-01 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: 1720051200000, // 2024-07-04 00:00:00 UTC in milliseconds
+    birth_date: 1625097600000, // 2021-07-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: {
+      purpose: "Protection",
+      alertness: "Very High",
+      loyalty: true,
+      training: {
+        difficulty: "Moderate",
+        specialties: ["Guard work", "Police work"],
+      },
+    },
   },
   {
     id: "9",
@@ -86,8 +133,11 @@ export const dogRaces = [
     max_age: 16,
     hight: 22.0,
     width: 45.0,
-    appearance_date: "1915-01-01",
     is_dangerous: false,
+    registration_timestamp_s: 1654041600, // 2022-06-01 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: 1722729600000, // 2024-08-04 00:00:00 UTC in milliseconds
+    birth_date: 1627776000000, // 2021-08-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: "Extremely intelligent and highly trainable",
   },
   {
     id: "10",
@@ -96,8 +146,18 @@ export const dogRaces = [
     max_age: 12,
     hight: 21.0,
     width: 65.0,
-    appearance_date: "1898-01-01",
     is_dangerous: true,
+    registration_timestamp_s: 1656720000, // 2022-07-02 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: 1725408000000, // 2024-09-04 00:00:00 UTC in milliseconds
+    birth_date: 1630454400000, // 2021-09-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: {
+      misconceptions: [
+        "Often misunderstood",
+        "Can be gentle with proper training",
+      ],
+      requires: ["Experienced owner", "Early socialization"],
+      strength: 9.5,
+    },
   },
   {
     id: "10a",
@@ -106,8 +166,11 @@ export const dogRaces = [
     max_age: 12,
     hight: 20.0,
     width: 50.0,
-    appearance_date: "2000-01-01",
     is_dangerous: null,
+    registration_timestamp_s: 1659398400, // 2022-08-02 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: null,
+    birth_date: 1633046400000, // 2021-10-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: ["Variable traits", "Unique personality"],
   },
   {
     id: "10b",
@@ -176,8 +239,16 @@ export const dogRaces = [
     max_age: 16,
     hight: 8.0,
     width: 7.0,
-    appearance_date: "1886-01-01",
     is_dangerous: false,
+    registration_timestamp_s: 1672531200, // 2023-01-01 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: 1677628800000, // 2023-03-01 00:00:00 UTC in milliseconds
+    birth_date: 1609459200000, // 2021-01-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: {
+      size: "Toy",
+      personality: ["Energetic", "Brave", "Determined"],
+      grooming_needs: "High",
+      apartment_suitable: true,
+    },
   },
   {
     id: "15",
@@ -326,8 +397,11 @@ export const dogRaces = [
     max_age: 13,
     hight: 27.0,
     width: 90.0,
-    appearance_date: "1943-01-01",
     is_dangerous: false,
+    registration_timestamp_s: 1698796800, // 2023-11-01 00:00:00 UTC in seconds
+    last_checkup_timestamp_ms: 1730332800000, // 2024-10-31 00:00:00 UTC in milliseconds
+    birth_date: 1640995200000, // 2022-01-01 00:00:00 UTC (epoch milliseconds)
+    characteristics: "Gray ghost - elegant hunting companion",
   },
   {
     id: "30",
@@ -466,7 +540,60 @@ export const dogRaces = [
     max_age: 8,
     hight: null,
     width: 50.0,
-    appearance_date: "2000-01-01",
     is_dangerous: null,
+    registration_timestamp_s: undefined,
+    last_checkup_timestamp_ms: 1704067200000, // 2024-01-01 00:00:00 UTC in milliseconds
+    birth_date: undefined,
+    characteristics: {
+      status: "Unknown breed",
+      note: "Needs genetic testing",
+      estimated_mix: null,
+    },
   },
 ];
+
+// Utility function to add missing fields to entries that don't have them
+export const addMissingFieldsToEntries = () => {
+  const sampleCharacteristics = [
+    ["Loyal", "Friendly"],
+    { temperament: "Gentle", energy: "Medium" },
+    "Well-balanced breed",
+    null,
+    { training: "Easy", exercise_needs: "Daily walks" },
+    ["Protective", "Alert"],
+    undefined,
+  ];
+
+  return dogRaces.map((entry, index) => {
+    // If entry already has the new fields, return as is
+    if ("registration_timestamp_s" in entry) {
+      return entry;
+    }
+
+    // Add missing fields with sample data
+    const baseYear = 2022;
+    const registrationDate = new Date(baseYear, index % 12, (index % 28) + 1);
+    const checkupDate = new Date(
+      2024,
+      (index + 3) % 12,
+      ((index + 5) % 28) + 1
+    );
+    const birthDate = new Date(2021, (index + 6) % 12, ((index + 2) % 28) + 1);
+
+    return {
+      ...entry,
+      registration_timestamp_s:
+        Math.random() > 0.1
+          ? Math.floor(registrationDate.getTime() / 1000)
+          : null,
+      last_checkup_timestamp_ms:
+        Math.random() > 0.05 ? checkupDate.getTime() : null,
+      birth_date: Math.random() > 0.05 ? birthDate.getTime() : null,
+      characteristics:
+        sampleCharacteristics[index % sampleCharacteristics.length],
+    };
+  });
+};
+
+// Uncomment the line below to populate missing fields for all entries
+// export const enrichedDogRaces = addMissingFieldsToEntries();
