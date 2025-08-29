@@ -23,8 +23,8 @@ export const SearchField: React.FC<SearchFieldProps> = ({
           htmlFor={`search-${colId}`}
           className={`absolute left-3 transition-all duration-200 pointer-events-none ${
             hasValue
-              ? "-top-2 text-xs text-primary bg-white px-1 z-10"
-              : "top-2 text-sm text-secondary-400"
+              ? "-top-2 text-xs text-deep-table-primary bg-deep-table-bg-white px-1 z-10"
+              : "top-2 text-sm text-deep-table-secondary-400"
           }`}
         >
           {label}
@@ -33,7 +33,7 @@ export const SearchField: React.FC<SearchFieldProps> = ({
         {/* Search icon */}
         <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
           <svg
-            className="w-4 h-4 text-secondary-400"
+            className="w-4 h-4 text-deep-table-secondary-400"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 20 20"
@@ -52,7 +52,7 @@ export const SearchField: React.FC<SearchFieldProps> = ({
         <input
           type="text"
           id={`search-${colId}`}
-          className="block w-full p-2 pl-3 pr-10 text-sm text-secondary-400 border border-secondary-300 rounded-lg bg-white focus:ring-primary focus:border-primary transition-colors duration-200"
+          className="block w-full p-2 pl-3 pr-10 text-sm text-deep-table-secondary-400 border border-deep-table-secondary-300 rounded-lg bg-deep-table-bg-white focus:ring-deep-table-primary focus:border-deep-table-primary transition-colors duration-200"
           placeholder={hasValue ? "" : ""}
           value={value}
           onChange={(e) => onChange(e.target.value)}

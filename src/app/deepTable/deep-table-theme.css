@@ -1,0 +1,128 @@
+/**
+ * DeepTable Component Theme
+ * 
+ * This file contains all the CSS custom properties used by the DeepTable component.
+ * Define these variables in your project to customize the DeepTable colors,
+ * or use the default values provided here.
+ * 
+ * To customize, override these variables in your global CSS:
+ * 
+ * :root {
+ *   --deep-table-primary: #your-color;
+ *   --deep-table-primary-light: #your-light-color;
+ *   // ... other overrides
+ * }
+ */
+
+:root {
+  /* Primary brand colors - Used for headers, active states, and primary actions */
+  --deep-table-primary: #009ee3;
+  --deep-table-primary-light: #afd3e8;
+  --deep-table-primary-medium: #007caa;
+  --deep-table-primary-dark: #00597a;
+
+  /* Secondary/neutral colors - Used for borders, backgrounds, and secondary text */
+  --deep-table-secondary-100: #e6ecf0;
+  --deep-table-secondary-200: #c3ced5;
+  --deep-table-secondary-300: #8fa2ac;
+  --deep-table-secondary-400: #506671;
+  --deep-table-secondary-500: #3d525a;
+
+  /* Content/action colors - Used for specific actions and highlights */
+  --deep-table-content-yellow: #ffcc00;
+  --deep-table-content-red: #d50c2f;
+  --deep-table-content-orange: #e94c0a;
+
+  /* Background colors - Used for various background contexts */
+  --deep-table-bg-main: #f4f4f5;
+  --deep-table-bg-white: #ffffff;
+  --deep-table-bg-error: #fef2f2;
+
+  /* Semantic colors - Used for specific UI states */
+  --deep-table-semantic-pink-text: #9f1239;
+}
+
+/* Fallback styles with direct color values to ensure visibility */
+.deep-table-container {
+  /* Ensure the component uses its own color scheme */
+  --color-primary: var(--deep-table-primary);
+  --color-primary-light: var(--deep-table-primary-light);
+  --color-primary-medium: var(--deep-table-primary-medium);
+  --color-primary-dark: var(--deep-table-primary-dark);
+
+  --color-secondary-100: var(--deep-table-secondary-100);
+  --color-secondary-200: var(--deep-table-secondary-200);
+  --color-secondary-300: var(--deep-table-secondary-300);
+  --color-secondary-400: var(--deep-table-secondary-400);
+  --color-secondary-500: var(--deep-table-secondary-500);
+
+  --color-content-yellow: var(--deep-table-content-yellow);
+  --color-content-red: var(--deep-table-content-red);
+  --color-content-orange: var(--deep-table-content-orange);
+}
+
+/* Direct fallback styles for critical elements */
+.deep-table-container .bg-deep-table-primary {
+  background-color: #009ee3 !important;
+}
+
+.deep-table-container .text-deep-table-primary {
+  color: #009ee3 !important;
+}
+
+.deep-table-container .border-deep-table-primary {
+  border-color: #009ee3 !important;
+}
+
+.deep-table-container .bg-deep-table-primary-light {
+  background-color: #afd3e8 !important;
+}
+
+.deep-table-container .bg-deep-table-primary-medium {
+  background-color: #007caa !important;
+}
+
+.deep-table-container .text-deep-table-primary-dark {
+  color: #00597a !important;
+}
+
+.deep-table-container .bg-deep-table-bg-white {
+  background-color: #ffffff !important;
+}
+
+.deep-table-container .bg-deep-table-bg-main {
+  background-color: #f4f4f5 !important;
+}
+
+.deep-table-container .border-deep-table-secondary-200 {
+  border-color: #c3ced5 !important;
+}
+
+.deep-table-container .border-deep-table-secondary-300 {
+  border-color: #8fa2ac !important;
+}
+
+.deep-table-container .text-deep-table-secondary-400 {
+  color: #506671 !important;
+}
+
+.deep-table-container .text-deep-table-content-yellow {
+  color: #ffcc00 !important;
+}
+
+.deep-table-container .text-deep-table-content-red {
+  color: #d50c2f !important;
+}
+
+.deep-table-container .text-deep-table-content-orange {
+  color: #e94c0a !important;
+}
+
+/* Hover states */
+.deep-table-container .hover\:bg-deep-table-primary-medium:hover {
+  background-color: #007caa !important;
+}
+
+.deep-table-container .hover\:bg-deep-table-secondary-100:hover {
+  background-color: #e6ecf0 !important;
+}

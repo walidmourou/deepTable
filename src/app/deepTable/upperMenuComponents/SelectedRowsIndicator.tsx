@@ -13,13 +13,13 @@ export const SelectedRowsIndicator: React.FC<SelectedRowsIndicatorProps> = ({
 
   return (
     <div className="flex items-center space-x-2">
-      <span className="text-sm font-medium text-primary-dark">
+      <span className="text-sm font-medium text-deep-table-primary-dark">
         {selectedCount} row{selectedCount !== 1 ? "s" : ""} selected
       </span>
       <button
         type="button"
         onClick={onUnselectAll}
-        className="flex items-center justify-center text-pink-800 hover:text-content-red hover:bg-red-50 rounded px-2 py-1 text-xs font-medium transition-colors duration-200"
+        className="flex items-center justify-center text-deep-table-semantic-pink-text hover:text-deep-table-content-red hover:bg-deep-table-bg-error rounded px-2 py-1 text-xs font-medium transition-colors duration-200"
         title="Unselect all rows"
       >
         <svg

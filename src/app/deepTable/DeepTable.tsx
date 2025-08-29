@@ -12,6 +12,7 @@ import { CurrentPageIndexes, Pagination } from "./Pagination";
 import { TableRow } from "./tableComponents/TableRow";
 import { SearchFilterAddSection } from "./UpperMenu";
 import { areRowsEqual } from "./utils";
+import "./deep-table-theme.css";
 
 export default function DeepTable({
   columnNames = [],
@@ -285,12 +286,14 @@ export default function DeepTable({
   // Error boundary render
   if (error) {
     return (
-      <div className="p-4 text-content-red border border-content-red rounded-lg bg-red-50">
-        <h3 className="font-bold text-content-red">Error in DeepTable:</h3>
-        <p className="text-content-red">{error.message}</p>
+      <div className="p-4 text-deep-table-content-red border border-deep-table-content-red rounded-lg bg-deep-table-bg-error">
+        <h3 className="font-bold text-deep-table-content-red">
+          Error in DeepTable:
+        </h3>
+        <p className="text-deep-table-content-red">{error.message}</p>
         <button
           onClick={() => setError(null)}
-          className="mt-2 px-4 py-2 bg-content-red text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+          className="mt-2 px-4 py-2 bg-deep-table-content-red text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
         >
           Try Again
         </button>
@@ -317,11 +320,11 @@ export default function DeepTable({
   // ============================================================================
 
   return (
-    <div className="w-full bg-zinc-100 p-4 rounded-lg shadow-sm relative">
+    <div className="deep-table-container w-full bg-deep-table-bg-main p-4 rounded-lg shadow-sm relative">
       {/* Loading Overlay */}
       {isLoading && (
-        <div className="absolute inset-0 bg-secondary-100 opacity-75 flex items-center justify-center z-50">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+        <div className="absolute inset-0 bg-deep-table-secondary-100 opacity-75 flex items-center justify-center z-50">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-deep-table-primary"></div>
         </div>
       )}
 
@@ -339,8 +342,8 @@ export default function DeepTable({
         />
 
         {/* Table Section */}
-        <div className="w-full overflow-x-auto border border-secondary-200 rounded-lg shadow-sm">
-          <table className="w-full border-collapse bg-white">
+        <div className="w-full overflow-x-auto border border-deep-table-secondary-200 rounded-lg shadow-sm">
+          <table className="w-full border-collapse bg-deep-table-bg-white">
             <TableHeader
               columnNames={columnNames}
               selectable={selectable}

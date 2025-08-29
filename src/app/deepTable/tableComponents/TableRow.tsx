@@ -43,13 +43,13 @@ const convertTimestampMillisecondsToTime = (timestamp: number): string => {
 
 const renderVariantContent = (value: unknown): React.ReactElement => {
   if (value === null || value === undefined) {
-    return <span className="text-secondary-400 italic">null</span>;
+    return <span className="text-deep-table-secondary-400 italic">null</span>;
   }
 
   if (Array.isArray(value)) {
     return (
       <div className="max-w-xs">
-        <span className="text-xs text-secondary-500 block">
+        <span className="text-xs text-deep-table-secondary-400 block">
           Array ({value.length})
         </span>
         <div className="text-sm truncate" title={JSON.stringify(value)}>
@@ -68,7 +68,9 @@ const renderVariantContent = (value: unknown): React.ReactElement => {
     const objStr = JSON.stringify(value);
     return (
       <div className="max-w-xs">
-        <span className="text-xs text-secondary-500 block">Object</span>
+        <span className="text-xs text-deep-table-secondary-400 block">
+          Object
+        </span>
         <div className="text-sm truncate" title={objStr}>
           {objStr.length > 30 ? `${objStr.substring(0, 30)}...` : objStr}
         </div>
@@ -86,7 +88,7 @@ const renderCellContent = (value: unknown, type: ColumnType) => {
         return (
           <span
             title="No value"
-            className="inline-block w-4 h-4 text-secondary-400 text-center"
+            className="inline-block w-4 h-4 text-deep-table-secondary-400 text-center"
           >
             —
           </span>
@@ -100,26 +102,26 @@ const renderCellContent = (value: unknown, type: ColumnType) => {
           disabled
           checked={booleanValue}
           type="checkbox"
-          className="w-4 h-4 text-primary bg-white border-secondary-300 rounded focus:ring-primary"
+          className="w-4 h-4 text-deep-table-primary bg-deep-table-bg-white border-deep-table-secondary-300 rounded focus:ring-deep-table-primary"
           readOnly
         />
       );
 
     case ColumnType.timestamp_s:
       if (value === null || value === undefined) {
-        return <span className="text-secondary-400">—</span>;
+        return <span className="text-deep-table-secondary-400">—</span>;
       }
       return <p>{convertTimestampSecondsToTime(value as number)}</p>;
 
     case ColumnType.timestamp_ms:
       if (value === null || value === undefined) {
-        return <span className="text-secondary-400">—</span>;
+        return <span className="text-deep-table-secondary-400">—</span>;
       }
       return <p>{convertTimestampMillisecondsToTime(value as number)}</p>;
 
     case ColumnType.date:
       if (value === null || value === undefined) {
-        return <span className="text-secondary-400">—</span>;
+        return <span className="text-deep-table-secondary-400">—</span>;
       }
       return <p>{convertEpochToTime(value as number)}</p>;
 
@@ -149,10 +151,10 @@ export const TableRow: React.FC<TableRowProps> = ({
   return (
     <tr
       key={`row-${rid}`}
-      className={`w-full border-b border-secondary-200 transition-colors duration-150 ${
+      className={`w-full border-b border-deep-table-secondary-200 transition-colors duration-150 ${
         isSelected
-          ? "bg-primary-light text-primary-dark"
-          : "bg-white hover:bg-secondary-100"
+          ? "bg-deep-table-primary-light text-deep-table-primary-dark selected"
+          : "bg-deep-table-bg-white hover:bg-deep-table-secondary-100"
       }`}
     >
       {selectable && (
@@ -162,7 +164,7 @@ export const TableRow: React.FC<TableRowProps> = ({
               type="checkbox"
               checked={isSelected}
               onChange={(e) => onSelectChange?.(row, e.target.checked)}
-              className="w-4 h-4 text-primary bg-white border-secondary-300 rounded focus:ring-primary focus:ring-2"
+              className="w-4 h-4 text-deep-table-primary bg-deep-table-bg-white border-deep-table-secondary-300 rounded focus:ring-deep-table-primary focus:ring-2"
             />
           </div>
         </td>
@@ -174,8 +176,8 @@ export const TableRow: React.FC<TableRowProps> = ({
               key={`${rid}-${col.id}`}
               className={`${isDenseTable ? "px-3 py-2" : "px-6 py-4"} ${
                 col.highlight
-                  ? "font-semibold text-primary-dark"
-                  : "text-secondary-400"
+                  ? "font-semibold text-deep-table-primary-dark"
+                  : "text-deep-table-secondary-400"
               } ${col.align || "text-center"}`}
             >
               {renderCellContent(row[col.id], col.type)}
@@ -190,7 +192,7 @@ export const TableRow: React.FC<TableRowProps> = ({
                 type="button"
                 onClick={() => handleEditAction(row, columnNames)}
                 title="Edit"
-                className="group relative w-7 h-7 flex items-center justify-center rounded-md text-content-orange border border-transparent hover:ring-2 hover:ring-content-orange/50 focus:ring-2 focus:outline-none focus:ring-content-orange/40 transition-all duration-200"
+                className="group relative w-7 h-7 flex items-center justify-center rounded-md text-deep-table-content-orange border border-transparent hover:ring-2 hover:ring-deep-table-content-orange/50 focus:ring-2 focus:outline-none focus:ring-deep-table-content-orange/40 transition-all duration-200 edit-button"
               >
                 <svg
                   className="w-4 h-4"
@@ -212,7 +214,7 @@ export const TableRow: React.FC<TableRowProps> = ({
                 type="button"
                 onClick={() => handleDeleteAction(row)}
                 title="Delete"
-                className="group relative w-7 h-7 flex items-center justify-center rounded-md text-content-red border border-transparent hover:ring-2 hover:ring-content-red/50 focus:ring-2 focus:outline-none focus:ring-content-red/40 transition-all duration-200"
+                className="group relative w-7 h-7 flex items-center justify-center rounded-md text-deep-table-content-red border border-transparent hover:ring-2 hover:ring-deep-table-content-red/50 focus:ring-2 focus:outline-none focus:ring-deep-table-content-red/40 transition-all duration-200 delete-button"
               >
                 <svg
                   className="w-4 h-4"
@@ -234,7 +236,7 @@ export const TableRow: React.FC<TableRowProps> = ({
                 type="button"
                 onClick={() => handleViewAction(row)}
                 title="View"
-                className="group relative w-7 h-7 flex items-center justify-center rounded-md text-primary border border-transparent hover:ring-2 hover:ring-primary/50 focus:ring-2 focus:outline-none focus:ring-primary/40 transition-all duration-200"
+                className="group relative w-7 h-7 flex items-center justify-center rounded-md text-deep-table-primary border border-transparent hover:ring-2 hover:ring-deep-table-primary/50 focus:ring-2 focus:outline-none focus:ring-deep-table-primary/40 transition-all duration-200 view-button"
               >
                 <svg
                   className="w-4 h-4"

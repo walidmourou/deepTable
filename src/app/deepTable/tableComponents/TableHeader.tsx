@@ -32,7 +32,7 @@ export const ColumnOrderSvg = ({ colOrder, colId }: ColumnOrderSvgProps) => {
   if (colOrder[colId] === ColumnOrderType.asc) {
     return (
       <svg
-        className="w-4 h-4 text-content-yellow ml-1 transition-colors duration-200"
+        className="w-4 h-4 text-deep-table-content-yellow ml-1 transition-colors duration-200 sort-icon"
         stroke="currentColor"
         fill="currentColor"
         strokeWidth="0"
@@ -50,7 +50,7 @@ export const ColumnOrderSvg = ({ colOrder, colId }: ColumnOrderSvgProps) => {
   // Descending order
   return (
     <svg
-      className="w-4 h-4 text-content-yellow ml-1 transition-colors duration-200"
+      className="w-4 h-4 text-deep-table-content-yellow ml-1 transition-colors duration-200 sort-icon"
       stroke="currentColor"
       fill="currentColor"
       strokeWidth="0"
@@ -172,7 +172,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   );
 
   return (
-    <thead className="text-sm font-semibold text-white uppercase bg-primary">
+    <thead className="text-sm font-semibold text-white uppercase bg-deep-table-primary table-header">
       <tr className="items-center w-full">
         {selectable && (
           <th scope="col" className="p-3">
@@ -182,7 +182,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                 type="checkbox"
                 checked={allSelected}
                 onChange={(e) => onSelectAll?.(e.target.checked)}
-                className="w-4 h-4 text-primary bg-white border-primary-light rounded focus:ring-primary focus:ring-2"
+                className="w-4 h-4 text-deep-table-primary bg-deep-table-bg-white border-deep-table-primary-light rounded focus:ring-deep-table-primary focus:ring-2"
               />
               <label htmlFor="checkbox-all-search" className="sr-only">
                 checkbox
@@ -204,9 +204,11 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                 role={!column.notOrder ? "button" : undefined}
                 className={`px-3 py-3 ${
                   !column.notOrder
-                    ? "hover:bg-primary-medium cursor-pointer transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+                    ? "hover:bg-deep-table-primary-medium cursor-pointer transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                     : ""
-                } ${columnOrder[column.id] ? "bg-primary-medium" : ""}`}
+                } ${
+                  columnOrder[column.id] ? "bg-deep-table-primary-medium" : ""
+                }`}
                 title={
                   !column.notOrder
                     ? "Click to sort, double-click to reset all sorting, press Escape to reset all"

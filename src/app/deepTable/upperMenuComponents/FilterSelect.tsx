@@ -70,7 +70,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
       {isFilterActive && (
         <label
           htmlFor={`filter-${colId}`}
-          className="absolute -top-2 left-3 text-xs text-primary bg-white px-1 z-10 font-medium"
+          className="absolute -top-2 left-3 text-xs text-deep-table-primary bg-deep-table-bg-white px-1 z-10 font-medium"
         >
           {column.label}
         </label>
@@ -82,8 +82,8 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
         aria-label={column.label}
         className={`filterType${
           column.type
-        } bg-white border border-secondary-300 text-secondary-400 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2 transition-colors duration-200 ${
-          isFilterActive ? "border-primary" : ""
+        } bg-deep-table-bg-white border border-deep-table-secondary-300 text-deep-table-secondary-400 text-sm rounded-lg focus:ring-deep-table-primary focus:border-deep-table-primary block w-full p-2 transition-colors duration-200 ${
+          isFilterActive ? "border-deep-table-primary" : ""
         }`}
         onChange={(e) => {
           const selectedValue = e.target.value;
@@ -93,7 +93,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
       >
         <option
           value={NO_FILTER_VALUE}
-          className="font-semibold text-secondary-400"
+          className="font-semibold text-deep-table-secondary-400"
         >
           {column.label}
         </option>
@@ -101,7 +101,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
           <option
             key={v === null ? "null" : String(v)}
             value={v === null ? "null" : String(v)}
-            className="text-secondary-400"
+            className="text-deep-table-secondary-400"
           >
             {getDisplayValue(v)}
           </option>

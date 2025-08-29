@@ -114,7 +114,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       <div className="flex items-center space-x-4">
         <select
           aria-label="Rows per page"
-          className="p-2 text-sm text-secondary-400 border border-secondary-300 rounded-lg bg-white focus:ring-primary focus:border-primary transition-colors duration-200"
+          className="p-2 text-sm text-deep-table-secondary-400 border border-deep-table-secondary-300 rounded-lg bg-deep-table-bg-white focus:ring-deep-table-primary focus:border-deep-table-primary transition-colors duration-200"
           onChange={(e) => handleRowsPerPageChange(e.target.value)}
           value={rowsPerPage}
         >
@@ -122,13 +122,13 @@ export const Pagination: React.FC<PaginationProps> = ({
           <option value="10">10</option>
           <option value="25">25</option>
         </select>
-        <span className="text-sm font-normal text-secondary-400">
+        <span className="text-sm font-normal text-deep-table-secondary-400">
           Showing{" "}
-          <span className="font-semibold text-primary-dark">
+          <span className="font-semibold text-deep-table-primary-dark">
             {currentPageIdxs.firstRowIdx + 1}-{currentPageIdxs.lastRowIdx + 1}
           </span>{" "}
           of{" "}
-          <span className="font-semibold text-primary-dark">
+          <span className="font-semibold text-deep-table-primary-dark">
             {displayedRowsCount}
           </span>
         </span>
@@ -138,10 +138,10 @@ export const Pagination: React.FC<PaginationProps> = ({
         <li>
           <button
             type="button"
-            className={`flex items-center justify-center px-3 h-8 ml-0 leading-tight border border-secondary-300 rounded-l-lg transition-colors duration-200 ${
+            className={`flex items-center justify-center px-3 h-8 ml-0 leading-tight border border-deep-table-secondary-300 rounded-l-lg transition-colors duration-200 ${
               pageId === 1
-                ? "text-secondary-300 bg-secondary-100 cursor-not-allowed"
-                : "text-secondary-400 bg-white hover:bg-secondary-100 hover:text-primary"
+                ? "text-deep-table-secondary-300 bg-deep-table-secondary-100 cursor-not-allowed"
+                : "text-deep-table-secondary-400 bg-deep-table-bg-white hover:bg-deep-table-secondary-100 hover:text-deep-table-primary"
             }`}
             onClick={() => handlePageChange(1)}
             disabled={pageId === 1}
@@ -153,10 +153,10 @@ export const Pagination: React.FC<PaginationProps> = ({
         <li>
           <button
             type="button"
-            className={`flex items-center justify-center px-3 h-8 leading-tight border border-secondary-300 transition-colors duration-200 ${
+            className={`flex items-center justify-center px-3 h-8 leading-tight border border-deep-table-secondary-300 transition-colors duration-200 ${
               pageId === 1
-                ? "text-secondary-300 bg-secondary-100 cursor-not-allowed"
-                : "text-secondary-400 bg-white hover:bg-secondary-100 hover:text-primary"
+                ? "text-deep-table-secondary-300 bg-deep-table-secondary-100 cursor-not-allowed"
+                : "text-deep-table-secondary-400 bg-deep-table-bg-white hover:bg-deep-table-secondary-100 hover:text-deep-table-primary"
             }`}
             onClick={() => handlePageChange(pageId - 1)}
             disabled={pageId === 1}
@@ -169,10 +169,10 @@ export const Pagination: React.FC<PaginationProps> = ({
           <li key={`page-${pageNum}`}>
             <button
               type="button"
-              className={`flex items-center justify-center px-3 h-8 border-secondary-300 transition-colors duration-200 ${
+              className={`flex items-center justify-center px-3 h-8 border-deep-table-secondary-300 transition-colors duration-200 ${
                 pageNum === pageId
-                  ? "text-white border bg-primary hover:bg-primary-medium"
-                  : "text-secondary-400 border bg-white hover:bg-secondary-100 hover:text-primary"
+                  ? "text-white border bg-deep-table-primary hover:bg-deep-table-primary-medium"
+                  : "text-deep-table-secondary-400 border bg-deep-table-bg-white hover:bg-deep-table-secondary-100 hover:text-deep-table-primary"
               }`}
               onClick={() => handlePageChange(pageNum)}
             >
@@ -184,10 +184,10 @@ export const Pagination: React.FC<PaginationProps> = ({
         <li>
           <button
             type="button"
-            className={`flex items-center justify-center px-3 h-8 leading-tight border border-secondary-300 transition-colors duration-200 ${
+            className={`flex items-center justify-center px-3 h-8 leading-tight border border-deep-table-secondary-300 transition-colors duration-200 ${
               pageId === paginationRange[paginationRange.length - 1]
-                ? "text-secondary-300 bg-secondary-100 cursor-not-allowed"
-                : "text-secondary-400 bg-white hover:bg-secondary-100 hover:text-primary"
+                ? "text-deep-table-secondary-300 bg-deep-table-secondary-100 cursor-not-allowed"
+                : "text-deep-table-secondary-400 bg-deep-table-bg-white hover:bg-deep-table-secondary-100 hover:text-deep-table-primary"
             }`}
             onClick={() => handlePageChange(pageId + 1)}
             disabled={pageId === paginationRange[paginationRange.length - 1]}
@@ -199,10 +199,10 @@ export const Pagination: React.FC<PaginationProps> = ({
         <li>
           <button
             type="button"
-            className={`flex items-center justify-center px-3 h-8 leading-tight border border-secondary-300 rounded-r-lg transition-colors duration-200 ${
+            className={`flex items-center justify-center px-3 h-8 leading-tight border border-deep-table-secondary-300 rounded-r-lg transition-colors duration-200 ${
               pageId === paginationRange[paginationRange.length - 1]
-                ? "text-secondary-300 bg-secondary-100 cursor-not-allowed"
-                : "text-secondary-400 bg-white hover:bg-secondary-100 hover:text-primary"
+                ? "text-deep-table-secondary-300 bg-deep-table-secondary-100 cursor-not-allowed"
+                : "text-deep-table-secondary-400 bg-deep-table-bg-white hover:bg-deep-table-secondary-100 hover:text-deep-table-primary"
             }`}
             onClick={() =>
               handlePageChange(paginationRange[paginationRange.length - 1])

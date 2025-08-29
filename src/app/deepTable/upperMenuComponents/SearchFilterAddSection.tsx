@@ -165,9 +165,9 @@ export const SearchFilterAddSection: React.FC<SearchFilterAddSectionProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-between py-1 bg-white rounded-lg mb-1 shadow-sm relative">
+    <div className="flex items-center justify-between py-1 bg-deep-table-bg-white rounded-lg mb-1 shadow-sm relative">
       {/* Search Fields */}
-      <div className="flex items-center justify-start bg-white">
+      <div className="flex items-center justify-start bg-deep-table-bg-white">
         {searchFields.map((colId) => (
           <SearchField
             key={colId}
@@ -180,7 +180,7 @@ export const SearchFilterAddSection: React.FC<SearchFilterAddSectionProps> = ({
       </div>
 
       {/* Middle section with filters and selected rows indicator */}
-      <div className="flex items-center justify-center space-x-4 bg-white">
+      <div className="flex items-center justify-center space-x-4 bg-deep-table-bg-white">
         {/* Selected Rows Indicator */}
         <SelectedRowsIndicator
           selectedCount={selectedRowsCount}
@@ -192,7 +192,7 @@ export const SearchFilterAddSection: React.FC<SearchFilterAddSectionProps> = ({
             <div className="mr-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-primary"
+                className="h-6 w-6 text-deep-table-primary"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -284,7 +284,7 @@ export const SearchFilterAddSection: React.FC<SearchFilterAddSectionProps> = ({
         <div>
           <button
             type="button"
-            className="flex items-center justify-center text-white bg-primary hover:bg-primary-medium focus:ring-4 focus:ring-primary/30 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-1 focus:outline-none transition-colors duration-200"
+            className="flex items-center justify-center text-white bg-deep-table-primary hover:bg-deep-table-primary-medium focus:ring-4 focus:ring-deep-table-primary/30 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-1 focus:outline-none transition-colors duration-200"
             onClick={() => handleAdd(columnNames)}
             disabled={isLoading}
           >
