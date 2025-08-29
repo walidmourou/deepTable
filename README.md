@@ -1,138 +1,4 @@
-# DeepTable Color Configuration Guide
-
-This guide explains how the DeepTable component's color system works and how to customize it for your project.
-
-## Overview
-
-The DeepTable component now uses a completely isolated color system that won't be affected by other project color schemes. All colors are defined using CSS custom properties with the `--deep-table-` prefix.
-
-## Files Modified
-
-1. **`tailwind.config.ts`** - Extended with DeepTable-specific color definitions
-2. **`deep-table-theme.css`** - New CSS file containing all color variable definitions
-3. **All DeepTable component files** - Updated to use the new color classes
-
-## Color Scheme Structure
-
-### Primary Colors
-Used for headers, active states, and primary actions:
-- `deep-table-primary` - Main brand color (#009ee3)
-- `deep-table-primary-light` - Light variant for selections (#afd3e8)
-- `deep-table-primary-medium` - Medium variant for hover states (#007caa)
-- `deep-table-primary-dark` - Dark variant for text (#00597a)
-
-### Secondary Colors
-Used for borders, backgrounds, and secondary text:
-- `deep-table-secondary-100` - Lightest gray (#e6ecf0)
-- `deep-table-secondary-200` - Light gray for borders (#c3ced5)
-- `deep-table-secondary-300` - Medium gray for borders (#8fa2ac)
-- `deep-table-secondary-400` - Dark gray for text (#506671)
-- `deep-table-secondary-500` - Darker gray for secondary text (#3d525a)
-
-### Content Colors
-Used for specific actions and highlights:
-- `deep-table-content-yellow` - Sort indicators (#ffcc00)
-- `deep-table-content-red` - Delete actions and errors (#d50c2f)
-- `deep-table-content-orange` - Edit actions (#e94c0a)
-
-### Background Colors
-Used for various background contexts:
-- `deep-table-bg-main` - Main container background (#f4f4f5)
-- `deep-table-bg-white` - White backgrounds (#ffffff)
-- `deep-table-bg-error` - Error state backgrounds (#fef2f2)
-
-### Semantic Colors
-Used for specific UI states:
-- `deep-table-semantic-pink-text` - Clear/unselect actions (#9f1239)
-
-## How to Customize Colors
-
-### Method 1: Override CSS Variables (Recommended)
-
-In your project's global CSS file, override the CSS custom properties:
-
-```css
-:root {
-  /* Customize primary colors */
-  --deep-table-primary: #your-brand-color;
-  --deep-table-primary-light: #your-light-color;
-  --deep-table-primary-medium: #your-medium-color;
-  --deep-table-primary-dark: #your-dark-color;
-  
-  /* Customize secondary colors */
-  --deep-table-secondary-100: #your-light-gray;
-  --deep-table-secondary-200: #your-border-color;
-  /* ... etc */
-}
-```
-
-### Method 2: Modify the Theme File
-
-Edit the `src/app/deepTable/deep-table-theme.css` file directly to change the default color values.
-
-### Method 3: Tailwind Config Override
-
-In your `tailwind.config.ts`, you can override the DeepTable colors:
-
-```typescript
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        'deep-table': {
-          primary: {
-            DEFAULT: '#your-color',
-            // ... other variants
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-## Usage in Other Projects
-
-When using the DeepTable component in other projects:
-
-1. **Copy the theme file**: Include `deep-table-theme.css` in your project
-2. **Import in your main component**: The DeepTable component automatically imports this file
-3. **Customize as needed**: Override the CSS variables to match your brand colors
-
-## Benefits of This Approach
-
-1. **Isolation**: DeepTable colors won't conflict with your project's color scheme
-2. **Consistency**: All DeepTable instances will use the same colors regardless of the parent project
-3. **Customizable**: Easy to customize while maintaining the component's visual integrity
-4. **Maintainable**: Centralized color definitions make updates easy
-5. **Backward Compatible**: Legacy color classes are still supported for gradual migration
-
-## Color Mapping Reference
-
-| Component | Element | Color Class | CSS Variable |
-|-----------|---------|-------------|--------------|
-| Table Header | Background | `bg-deep-table-primary` | `--deep-table-primary` |
-| Table Header | Text | `text-white` | Standard white |
-| Table Header | Hover | `hover:bg-deep-table-primary-medium` | `--deep-table-primary-medium` |
-| Table Row | Background | `bg-deep-table-bg-white` | `--deep-table-bg-white` |
-| Table Row | Hover | `hover:bg-deep-table-secondary-100` | `--deep-table-secondary-100` |
-| Table Row | Selected | `bg-deep-table-primary-light` | `--deep-table-primary-light` |
-| Borders | Table/Input | `border-deep-table-secondary-200` | `--deep-table-secondary-200` |
-| Text | Primary | `text-deep-table-primary-dark` | `--deep-table-primary-dark` |
-| Text | Secondary | `text-deep-table-secondary-400` | `--deep-table-secondary-400` |
-| Actions | Edit | `text-deep-table-content-orange` | `--deep-table-content-orange` |
-| Actions | Delete | `text-deep-table-content-red` | `--deep-table-content-red` |
-| Actions | View | `text-deep-table-primary` | `--deep-table-primary` |
-| Sort Icons | Active | `text-deep-table-content-yellow` | `--deep-table-content-yellow` |
-
-## Migration Notes
-
-- All existing color classes have been replaced with the new namespaced versions
-- The component now includes a `deep-table-container` class wrapper for scoping
-- Legacy color support is maintained in the Tailwind config for backward compatibility
-- The CSS file is automatically imported by the main DeepTable component
-
-This color system ensures that your DeepTable component will maintain its visual consistency regardless of the project it's used in, while still allowing for easy customization when needed.
+# Next JS TypeScript Table Component
 
 ## Overview
 
@@ -709,3 +575,139 @@ When extending the DeepTable component:
 ---
 
 *This documentation covers the core functionality of the DeepTable component. For specific implementation details or advanced customization, refer to the component source code.*
+
+# DeepTable Color Configuration Guide
+
+This guide explains how the DeepTable component's color system works and how to customize it for your project.
+
+## Overview
+
+The DeepTable component now uses a completely isolated color system that won't be affected by other project color schemes. All colors are defined using CSS custom properties with the `--deep-table-` prefix.
+
+## Files Modified
+
+1. **`tailwind.config.ts`** - Extended with DeepTable-specific color definitions
+2. **`deep-table-theme.css`** - New CSS file containing all color variable definitions
+3. **All DeepTable component files** - Updated to use the new color classes
+
+## Color Scheme Structure
+
+### Primary Colors
+Used for headers, active states, and primary actions:
+- `deep-table-primary` - Main brand color (#009ee3)
+- `deep-table-primary-light` - Light variant for selections (#afd3e8)
+- `deep-table-primary-medium` - Medium variant for hover states (#007caa)
+- `deep-table-primary-dark` - Dark variant for text (#00597a)
+
+### Secondary Colors
+Used for borders, backgrounds, and secondary text:
+- `deep-table-secondary-100` - Lightest gray (#e6ecf0)
+- `deep-table-secondary-200` - Light gray for borders (#c3ced5)
+- `deep-table-secondary-300` - Medium gray for borders (#8fa2ac)
+- `deep-table-secondary-400` - Dark gray for text (#506671)
+- `deep-table-secondary-500` - Darker gray for secondary text (#3d525a)
+
+### Content Colors
+Used for specific actions and highlights:
+- `deep-table-content-yellow` - Sort indicators (#ffcc00)
+- `deep-table-content-red` - Delete actions and errors (#d50c2f)
+- `deep-table-content-orange` - Edit actions (#e94c0a)
+
+### Background Colors
+Used for various background contexts:
+- `deep-table-bg-main` - Main container background (#f4f4f5)
+- `deep-table-bg-white` - White backgrounds (#ffffff)
+- `deep-table-bg-error` - Error state backgrounds (#fef2f2)
+
+### Semantic Colors
+Used for specific UI states:
+- `deep-table-semantic-pink-text` - Clear/unselect actions (#9f1239)
+
+## How to Customize Colors
+
+### Method 1: Override CSS Variables (Recommended)
+
+In your project's global CSS file, override the CSS custom properties:
+
+```css
+:root {
+  /* Customize primary colors */
+  --deep-table-primary: #your-brand-color;
+  --deep-table-primary-light: #your-light-color;
+  --deep-table-primary-medium: #your-medium-color;
+  --deep-table-primary-dark: #your-dark-color;
+  
+  /* Customize secondary colors */
+  --deep-table-secondary-100: #your-light-gray;
+  --deep-table-secondary-200: #your-border-color;
+  /* ... etc */
+}
+```
+
+### Method 2: Modify the Theme File
+
+Edit the `src/app/deepTable/deep-table-theme.css` file directly to change the default color values.
+
+### Method 3: Tailwind Config Override
+
+In your `tailwind.config.ts`, you can override the DeepTable colors:
+
+```typescript
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        'deep-table': {
+          primary: {
+            DEFAULT: '#your-color',
+            // ... other variants
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Usage in Other Projects
+
+When using the DeepTable component in other projects:
+
+1. **Copy the theme file**: Include `deep-table-theme.css` in your project
+2. **Import in your main component**: The DeepTable component automatically imports this file
+3. **Customize as needed**: Override the CSS variables to match your brand colors
+
+## Benefits of This Approach
+
+1. **Isolation**: DeepTable colors won't conflict with your project's color scheme
+2. **Consistency**: All DeepTable instances will use the same colors regardless of the parent project
+3. **Customizable**: Easy to customize while maintaining the component's visual integrity
+4. **Maintainable**: Centralized color definitions make updates easy
+5. **Backward Compatible**: Legacy color classes are still supported for gradual migration
+
+## Color Mapping Reference
+
+| Component | Element | Color Class | CSS Variable |
+|-----------|---------|-------------|--------------|
+| Table Header | Background | `bg-deep-table-primary` | `--deep-table-primary` |
+| Table Header | Text | `text-white` | Standard white |
+| Table Header | Hover | `hover:bg-deep-table-primary-medium` | `--deep-table-primary-medium` |
+| Table Row | Background | `bg-deep-table-bg-white` | `--deep-table-bg-white` |
+| Table Row | Hover | `hover:bg-deep-table-secondary-100` | `--deep-table-secondary-100` |
+| Table Row | Selected | `bg-deep-table-primary-light` | `--deep-table-primary-light` |
+| Borders | Table/Input | `border-deep-table-secondary-200` | `--deep-table-secondary-200` |
+| Text | Primary | `text-deep-table-primary-dark` | `--deep-table-primary-dark` |
+| Text | Secondary | `text-deep-table-secondary-400` | `--deep-table-secondary-400` |
+| Actions | Edit | `text-deep-table-content-orange` | `--deep-table-content-orange` |
+| Actions | Delete | `text-deep-table-content-red` | `--deep-table-content-red` |
+| Actions | View | `text-deep-table-primary` | `--deep-table-primary` |
+| Sort Icons | Active | `text-deep-table-content-yellow` | `--deep-table-content-yellow` |
+
+## Migration Notes
+
+- All existing color classes have been replaced with the new namespaced versions
+- The component now includes a `deep-table-container` class wrapper for scoping
+- Legacy color support is maintained in the Tailwind config for backward compatibility
+- The CSS file is automatically imported by the main DeepTable component
+
+This color system ensures that your DeepTable component will maintain its visual consistency regardless of the project it's used in, while still allowing for easy customization when needed.
