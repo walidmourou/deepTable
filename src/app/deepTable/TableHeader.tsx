@@ -1,6 +1,6 @@
 import { ColumnOrderType, Dictionary, TableColumn } from "./types";
 import { sortFunction } from "./utils";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo, useEffect } from "react";
 
 interface ColumnOrderSvgProps {
   colOrder: Dictionary<string>;
@@ -8,10 +8,11 @@ interface ColumnOrderSvgProps {
 }
 
 export const ColumnOrderSvg = ({ colOrder, colId }: ColumnOrderSvgProps) => {
+  // No order applied - show neutral sorting icon
   if (!(colId in colOrder)) {
     return (
       <svg
-        className="w-4 h-4 text-white opacity-60 hover:opacity-100 ml-1"
+        className="w-4 h-4 text-white opacity-60 hover:opacity-100 ml-1 transition-opacity duration-200"
         stroke="currentColor"
         fill="currentColor"
         strokeWidth="0"
@@ -19,15 +20,18 @@ export const ColumnOrderSvg = ({ colOrder, colId }: ColumnOrderSvgProps) => {
         height="1em"
         width="1em"
         xmlns="http://www.w3.org/2000/svg"
+        aria-label="Sort column"
       >
         <path d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41zm255-105L177 64c-9.4-9.4-24.6-9.4-33.9 0L24 183c-15.1 15.1-4.4 41 17 41h238c21.4 0 32.1-25.9 17-41z"></path>
       </svg>
     );
   }
+
+  // Ascending order
   if (colOrder[colId] === ColumnOrderType.asc) {
     return (
       <svg
-        className="w-4 h-4 text-content-yellow ml-1"
+        className="w-4 h-4 text-content-yellow ml-1 transition-colors duration-200"
         stroke="currentColor"
         fill="currentColor"
         strokeWidth="0"
@@ -35,14 +39,17 @@ export const ColumnOrderSvg = ({ colOrder, colId }: ColumnOrderSvgProps) => {
         height="1em"
         width="1em"
         xmlns="http://www.w3.org/2000/svg"
+        aria-label="Sorted ascending"
       >
         <path d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"></path>
       </svg>
     );
   }
+
+  // Descending order
   return (
     <svg
-      className="w-4 h-4 text-content-yellow ml-1"
+      className="w-4 h-4 text-content-yellow ml-1 transition-colors duration-200"
       stroke="currentColor"
       fill="currentColor"
       strokeWidth="0"
@@ -50,6 +57,7 @@ export const ColumnOrderSvg = ({ colOrder, colId }: ColumnOrderSvgProps) => {
       height="1em"
       width="1em"
       xmlns="http://www.w3.org/2000/svg"
+      aria-label="Sorted descending"
     >
       <path d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41z"></path>
     </svg>
@@ -64,6 +72,7 @@ interface TableHeaderProps {
   setDisplayedRows: React.Dispatch<React.SetStateAction<Dictionary<unknown>[]>>;
   allSelected?: boolean;
   onSelectAll?: (selected: boolean) => void;
+  onSortReset?: () => void; // Optional callback for when sorting is reset
 }
 
 export const TableHeader: React.FC<TableHeaderProps> = ({
@@ -74,26 +83,81 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
   setDisplayedRows,
   allSelected = false,
   onSelectAll,
+  onSortReset,
 }) => {
   const [columnOrder, setColumnOrder] = useState<Dictionary<string>>({});
-  const handleColumnOrderClick = useCallback(
-    (id: string) => {
-      if (!id) return;
-      setColumnOrder((prev) => {
-        if (!(id in prev)) return { [id]: ColumnOrderType.asc };
-        if (prev[id] === ColumnOrderType.asc)
-          return { [id]: ColumnOrderType.desc };
-        return { [id]: ColumnOrderType.asc };
+
+  // Memoize the sort function for better performance
+  const sortRows = useMemo(() => sortFunction(columnNames), [columnNames]);
+
+  // Effect to handle sorting when columnOrder changes
+  useEffect(() => {
+    const newDisplayedRows = [...initialState];
+
+    // Find the active sort column
+    const activeSortColumn = Object.keys(columnOrder)[0];
+
+    if (activeSortColumn && columnOrder[activeSortColumn]) {
+      newDisplayedRows.sort((a, b) => {
+        const sortResult = sortRows(
+          activeSortColumn,
+          a[activeSortColumn],
+          b[activeSortColumn]
+        );
+        return columnOrder[activeSortColumn] === ColumnOrderType.desc
+          ? -sortResult
+          : sortResult;
       });
-      const newDisplayedRows = [...initialState];
-      const sortRows = sortFunction(columnNames);
-      newDisplayedRows.sort((a, b) => sortRows(id, a[id], b[id]));
-      if (columnOrder[id] === ColumnOrderType.desc) {
-        newDisplayedRows.reverse();
+    }
+
+    setDisplayedRows(newDisplayedRows);
+  }, [columnOrder, initialState, sortRows, setDisplayedRows]);
+
+  // Function to reset all sorting
+  const resetAllSorting = useCallback(() => {
+    setColumnOrder({});
+    onSortReset?.();
+  }, [onSortReset]);
+
+  const handleColumnOrderClick = useCallback(
+    (id: string, isDoubleClick: boolean = false) => {
+      if (!id) return;
+
+      // Double-click resets all sorting
+      if (isDoubleClick) {
+        resetAllSorting();
+        return;
       }
-      setDisplayedRows(newDisplayedRows);
+
+      // Update column order state - the useEffect will handle the sorting
+      setColumnOrder((prevOrder) => {
+        if (!(id in prevOrder)) {
+          return { [id]: ColumnOrderType.asc };
+        } else if (prevOrder[id] === ColumnOrderType.asc) {
+          return { [id]: ColumnOrderType.desc };
+        } else {
+          // Reset to neutral state by removing the column from order
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { [id]: _, ...restOrder } = prevOrder;
+          return restOrder;
+        }
+      });
     },
-    [columnNames, columnOrder, initialState, setDisplayedRows]
+    [resetAllSorting]
+  );
+
+  // Handle keyboard navigation for accessibility
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent, columnId: string) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        handleColumnOrderClick(columnId);
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        resetAllSorting();
+      }
+    },
+    [handleColumnOrderClick, resetAllSorting]
   );
 
   return (
@@ -123,11 +187,27 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
                 scope="col"
                 id={column.id}
                 onClick={() => handleColumnOrderClick(column.id)}
+                onDoubleClick={() => handleColumnOrderClick(column.id, true)}
+                onKeyDown={(e) => handleKeyDown(e, column.id)}
+                tabIndex={!column.notOrder ? 0 : -1}
+                role={!column.notOrder ? "button" : undefined}
                 className={`px-3 py-3 ${
                   !column.notOrder
-                    ? "hover:bg-primary-medium cursor-pointer transition-colors duration-200"
+                    ? "hover:bg-primary-medium cursor-pointer transition-colors duration-200 select-none focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
                     : ""
-                }`}
+                } ${columnOrder[column.id] ? "bg-primary-medium" : ""}`}
+                title={
+                  !column.notOrder
+                    ? "Click to sort, double-click to reset all sorting, press Escape to reset all"
+                    : undefined
+                }
+                aria-sort={
+                  !column.notOrder && columnOrder[column.id]
+                    ? columnOrder[column.id] === ColumnOrderType.asc
+                      ? "ascending"
+                      : "descending"
+                    : "none"
+                }
               >
                 <div className="flex items-center justify-center">
                   <span className="uppercase text-sm font-semibold tracking-wider text-white">
@@ -143,7 +223,7 @@ export const TableHeader: React.FC<TableHeaderProps> = ({
         {isActionRequired && (
           <th
             scope="col"
-            className="flex justify-center items-center mt-2 text-white font-semibold"
+            className="flex justify-center items-center mt-3 text-white font-semibold"
           >
             Action
           </th>

@@ -29,6 +29,7 @@ export const dogRacesTableHeader: TableColumn[] = [
     label: "Max Age",
     align: CellTextAlign.right,
     type: ColumnType.integer,
+    canFilter: true,
   },
   {
     id: "hight",
@@ -46,13 +47,13 @@ export const dogRacesTableHeader: TableColumn[] = [
     id: "appearance_date",
     label: "Appearance Date",
     align: CellTextAlign.center,
-    type: ColumnType.date,
+    type: ColumnType.string,
   },
   {
     id: "is_dangerous",
     label: "Is Dangerous",
     align: CellTextAlign.center,
     type: ColumnType.boolean,
-    // canFilter: true,
+    canFilter: true,
   },
 ];

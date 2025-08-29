@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 export enum CellTextAlign {
   right = "text-right",
   center = "text-center",
@@ -20,7 +19,6 @@ export enum ColumnOrderType {
   desc = "Descending",
   neutral = "Neutral",
 }
-/* eslint-enable no-unused-vars */
 
 export type TableColumn = {
   id: string;
@@ -39,8 +37,23 @@ export type TableColumn = {
 };
 
 export type Filter = {
-  [key: string]: string | number | boolean;
+  [key: string]: string | number | boolean | null;
 };
+
+export type FilterableColumnType =
+  | ColumnType.string
+  | ColumnType.integer
+  | ColumnType.boolean;
+
+export function isFilterableColumnType(
+  type: ColumnType
+): type is FilterableColumnType {
+  return (
+    type === ColumnType.string ||
+    type === ColumnType.integer ||
+    type === ColumnType.boolean
+  );
+}
 
 export type TableDataType = Array<Dictionary<unknown>>;
 
@@ -69,6 +82,10 @@ export interface DeepTableProps {
     _currentRow: Dictionary<unknown>
   ) => void | Promise<void>;
   handleViewAction?: (_currentRow: Dictionary<unknown>) => void | Promise<void>;
+  selectedRows?: Set<Dictionary<unknown>>;
+  setSelectedRows?: React.Dispatch<
+    React.SetStateAction<Set<Dictionary<unknown>>>
+  >;
 }
 
 export interface TableActionHandlers {

@@ -11,12 +11,12 @@ import { TableHeader } from "./TableHeader";
 import { CurrentPageIndexes, Pagination } from "./Pagination";
 import { TableRow } from "./TableRow";
 import { SearchFilterAddSection } from "./UpperMenu";
+import { areRowsEqual } from "./utils";
 
 const DeepTable: React.FC<DeepTableProps> = ({
   columnNames = [],
   initialRowsValues = [],
   defaultNbrRowsPerPage = 10,
-  displayHeader = true,
   displayPagination = true,
   selectable = false,
   isDenseTable = true,
@@ -28,12 +28,9 @@ const DeepTable: React.FC<DeepTableProps> = ({
   handleEditAction = null,
   handleDeleteAction = null,
   handleViewAction = null,
+  selectedRows = new Set<Dictionary<unknown>>(),
+  setSelectedRows = () => {},
 }) => {
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO: implement the necessary logic to handle rows selection
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   const [displayedRows, setDisplayedRows] =
     useState<TableDataType>(initialRowsValues);
   const [currentPageIdxs, setCurrentPageIdxs] = useState<CurrentPageIndexes>({
@@ -48,72 +45,103 @@ const DeepTable: React.FC<DeepTableProps> = ({
       lastRowIdx: Math.min(defaultNbrRowsPerPage - 1, displayedRows.length - 1),
     });
   }, [displayedRows.length, defaultNbrRowsPerPage]);
-  // Row selection state
-  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
 
-  const handleRowSelection = useCallback((rowId: number, selected: boolean) => {
-    setSelectedRows((prev) => {
-      const newSet = new Set(prev);
-      if (selected) {
-        newSet.add(rowId);
-      } else {
-        newSet.delete(rowId);
+  // Helper functions for row selection
+  const isRowSelected = useCallback(
+    (row: Dictionary<unknown>): boolean => {
+      for (const selectedRow of selectedRows) {
+        if (areRowsEqual(selectedRow, row)) {
+          return true;
+        }
       }
-      return newSet;
-    });
-  }, []);
+      return false;
+    },
+    [selectedRows]
+  );
+
+  const removeRowFromSelection = useCallback(
+    (
+      rowToRemove: Dictionary<unknown>,
+      selectedSet: Set<Dictionary<unknown>>
+    ): void => {
+      for (const selectedRow of selectedSet) {
+        if (areRowsEqual(selectedRow, rowToRemove)) {
+          selectedSet.delete(selectedRow);
+          break;
+        }
+      }
+    },
+    []
+  );
+
+  const handleRowSelection = useCallback(
+    (row: Dictionary<unknown>, selected: boolean) => {
+      setSelectedRows((prev) => {
+        const newSet = new Set(prev);
+        if (selected) {
+          newSet.add(row);
+        } else {
+          removeRowFromSelection(row, newSet);
+        }
+        return newSet;
+      });
+    },
+    [setSelectedRows, removeRowFromSelection]
+  );
 
   const handleSelectAll = useCallback(
     (selected: boolean) => {
       if (selected) {
-        // Select only the rows visible on the current page
-        const currentPageRowIndices = Array.from(
-          {
-            length:
-              currentPageIdxs.lastRowIdx - currentPageIdxs.firstRowIdx + 1,
-          },
-          (_, i) => currentPageIdxs.firstRowIdx + i
-        ).filter((index) => index < displayedRows.length);
+        // Select rows visible on current page or all rows if pagination is disabled
+        const rowsToSelect = displayPagination
+          ? displayedRows.slice(
+              currentPageIdxs.firstRowIdx,
+              currentPageIdxs.lastRowIdx + 1
+            )
+          : displayedRows;
 
         setSelectedRows((prev) => {
           const newSet = new Set(prev);
-          currentPageRowIndices.forEach((index) => newSet.add(index));
+          rowsToSelect.forEach((row) => newSet.add(row));
           return newSet;
         });
       } else {
-        // Deselect only the rows visible on the current page
-        const currentPageRowIndices = Array.from(
-          {
-            length:
-              currentPageIdxs.lastRowIdx - currentPageIdxs.firstRowIdx + 1,
-          },
-          (_, i) => currentPageIdxs.firstRowIdx + i
-        ).filter((index) => index < displayedRows.length);
+        // Deselect rows visible on current page or all rows if pagination is disabled
+        const rowsToDeselect = displayPagination
+          ? displayedRows.slice(
+              currentPageIdxs.firstRowIdx,
+              currentPageIdxs.lastRowIdx + 1
+            )
+          : displayedRows;
 
         setSelectedRows((prev) => {
           const newSet = new Set(prev);
-          currentPageRowIndices.forEach((index) => newSet.delete(index));
+          rowsToDeselect.forEach((row) => {
+            removeRowFromSelection(row, newSet);
+          });
           return newSet;
         });
       }
     },
-    [displayedRows, currentPageIdxs]
+    [
+      displayedRows,
+      currentPageIdxs,
+      setSelectedRows,
+      removeRowFromSelection,
+      displayPagination,
+    ]
   );
 
   const allSelected = (() => {
-    const currentPageRowIndices = Array.from(
-      {
-        length: Math.min(
-          currentPageIdxs.lastRowIdx - currentPageIdxs.firstRowIdx + 1,
-          displayedRows.length - currentPageIdxs.firstRowIdx
-        ),
-      },
-      (_, i) => currentPageIdxs.firstRowIdx + i
-    ).filter((index) => index < displayedRows.length);
+    const rowsToCheck = displayPagination
+      ? displayedRows.slice(
+          currentPageIdxs.firstRowIdx,
+          currentPageIdxs.lastRowIdx + 1
+        )
+      : displayedRows;
 
     return (
-      currentPageRowIndices.length > 0 &&
-      currentPageRowIndices.every((index) => selectedRows.has(index))
+      rowsToCheck.length > 0 && rowsToCheck.every((row) => isRowSelected(row))
     );
   })();
   // ###############################################################################
@@ -186,6 +214,10 @@ const DeepTable: React.FC<DeepTableProps> = ({
   // End of Table action handlers
   // ###############################################################################
 
+  const handleUnselectAll = useCallback(() => {
+    setSelectedRows(new Set());
+  }, [setSelectedRows]);
+
   // Error boundary render
   if (error) {
     return (
@@ -217,48 +249,55 @@ const DeepTable: React.FC<DeepTableProps> = ({
           initialRowsValues={initialRowsValues}
           displayAddButton={displayAddButton}
           handleAddAction={tableAddAction}
+          selectedRowsCount={selectedRows.size}
+          onUnselectAll={handleUnselectAll}
         />
         <div className="w-full overflow-x-auto border border-secondary-200 rounded-lg shadow-sm">
           <table className="w-full border-collapse bg-white">
-            {displayHeader && (
-              <TableHeader
-                columnNames={columnNames}
-                selectable={selectable}
-                isActionRequired={
-                  displayEditAction || displayDeleteAction || displayViewAction
-                }
-                initialState={initialRowsValues}
-                setDisplayedRows={setDisplayedRows}
-                allSelected={allSelected}
-                onSelectAll={handleSelectAll}
-              />
-            )}
+            <TableHeader
+              columnNames={columnNames}
+              selectable={selectable}
+              isActionRequired={
+                displayEditAction || displayDeleteAction || displayViewAction
+              }
+              initialState={initialRowsValues}
+              setDisplayedRows={setDisplayedRows}
+              allSelected={allSelected}
+              onSelectAll={handleSelectAll}
+            />
             <tbody>
-              {displayedRows
-                .slice(
-                  currentPageIdxs.firstRowIdx,
-                  currentPageIdxs.lastRowIdx + 1
-                )
-                .map((row, index) => (
-                  <TableRow
-                    key={currentPageIdxs.firstRowIdx + index}
-                    row={row}
-                    rid={currentPageIdxs.firstRowIdx + index}
-                    columnNames={columnNames}
-                    isDenseTable={isDenseTable}
-                    displayEditAction={displayEditAction}
-                    displayDeleteAction={displayDeleteAction}
-                    displayViewAction={displayViewAction}
-                    selectable={selectable}
-                    isSelected={selectedRows.has(
-                      currentPageIdxs.firstRowIdx + index
-                    )}
-                    onSelectChange={handleRowSelection}
-                    handleEditAction={tableEditAction}
-                    handleDeleteAction={tableDeleteAction}
-                    handleViewAction={tableViewAction}
-                  />
-                ))}
+              {(displayPagination
+                ? displayedRows.slice(
+                    currentPageIdxs.firstRowIdx,
+                    currentPageIdxs.lastRowIdx + 1
+                  )
+                : displayedRows
+              ).map((row, index) => (
+                <TableRow
+                  key={
+                    displayPagination
+                      ? currentPageIdxs.firstRowIdx + index
+                      : index
+                  }
+                  row={row}
+                  rid={
+                    displayPagination
+                      ? currentPageIdxs.firstRowIdx + index
+                      : index
+                  }
+                  columnNames={columnNames}
+                  isDenseTable={isDenseTable}
+                  displayEditAction={displayEditAction}
+                  displayDeleteAction={displayDeleteAction}
+                  displayViewAction={displayViewAction}
+                  selectable={selectable}
+                  isSelected={isRowSelected(row)}
+                  onSelectChange={handleRowSelection}
+                  handleEditAction={tableEditAction}
+                  handleDeleteAction={tableDeleteAction}
+                  handleViewAction={tableViewAction}
+                />
+              ))}
             </tbody>
           </table>
         </div>
